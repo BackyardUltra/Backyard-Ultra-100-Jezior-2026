@@ -563,7 +563,7 @@ footer { text-align:center; padding:.5rem 1rem; font-size:.62rem; color:#444; le
 }
 #toast.show{opacity:1}
 
-@media(max-width:760px){
+@media (max-width:760px), (orientation:landscape) and (max-width:1100px) and (max-height:600px) {
   html { font-size:13px; }
   body { overflow-x:hidden; padding-bottom:66px; }
 
@@ -883,7 +883,7 @@ tbody tr.rf td:first-child { border-left-color:#aa83e8; }
 footer { color:#587486; border-top-color:rgba(67,111,134,.16); }
 #toast { background:#10283a; border-color:var(--orange); color:var(--orange2); }
 
-@media(max-width:760px){
+@media (max-width:760px), (orientation:landscape) and (max-width:1100px) and (max-height:600px) {
   body { padding-bottom:1rem; }
   .hdr {
     min-height:0;
@@ -1074,7 +1074,7 @@ body.scrolled .controls {
   opacity:1;
   pointer-events:auto;
   display:grid;
-  grid-template-columns:auto minmax(240px,560px) 1fr auto;
+  grid-template-columns:minmax(240px,700px) 1fr auto;
   align-items:center;
   gap:.9rem;
   padding:.55rem clamp(1.1rem,2.5vw,2.5rem);
@@ -1112,7 +1112,7 @@ body.scrolled .controls {
 .search-box:focus { border-color:#111; box-shadow:0 0 0 2px rgba(0,0,0,.07); }
 .search-box::placeholder { color:#777; }
 .toolbar-actions {
-  grid-column:4;
+  grid-column:3;
   display:flex;
   gap:.45rem;
   justify-content:flex-end;
@@ -1238,11 +1238,11 @@ footer {
   .stats-bar { grid-template-columns:1.4fr repeat(4,1fr); }
   .chip { padding:.12rem .8rem; min-height:60px; }
   .chip strong,.chip.cgold strong,.chip.cgrn strong,.chip.cred strong { font-size:1.75rem; }
-  .controls,body.scrolled .controls { grid-template-columns:auto minmax(180px,1fr) auto; }
-  .toolbar-actions { grid-column:3; }
+  .controls,body.scrolled .controls { grid-template-columns:minmax(180px,1fr) auto; }
+  .toolbar-actions { grid-column:2; }
 }
 
-@media(max-width:760px){
+@media (max-width:760px), (orientation:landscape) and (max-width:1100px) and (max-height:600px) {
   html { font-size:13px; }
   body { overflow-x:hidden; background:#ececec; }
   .hdr {
@@ -1316,9 +1316,8 @@ footer {
     gap:.55rem;
     padding:.7rem .6rem;
   }
-  .results-label { min-width:0; font-size:1.45rem; }
   .search-box { grid-column:1 / -1; grid-row:2; height:40px; }
-  .toolbar-actions { grid-column:2; grid-row:1; gap:.3rem; }
+  .toolbar-actions { grid-column:1 / -1; grid-row:1; gap:.3rem; justify-content:flex-end; }
   .hdr-btn { height:32px; padding:.22rem .4rem; }
   #btn-lang,#btn-pdf,#btn-legend { min-width:2.7rem; font-size:.57rem; }
   #btn-fs { width:32px; height:32px; }
@@ -1339,6 +1338,58 @@ footer {
   tbody td:nth-child(7) { border-top-color:#dedede !important; }
   .cn,.cr,.ck,.ct,.cl { color:#222; }
   footer { padding:.7rem 1rem 1rem; }
+}
+
+@media (orientation:landscape) and (max-width:1100px) and (max-height:600px) {
+  .hdr {
+    grid-template-columns:100px minmax(0,1fr) auto;
+    grid-template-areas:"logo title actions";
+    min-height:92px;
+    gap:.7rem;
+    padding:.4rem .6rem;
+  }
+  .hdr-logo { width:100px; height:76px; max-width:100px; }
+  .hdr-titles { align-self:center; }
+  .hdr-name { font-size:clamp(1.25rem,3.7vw,1.8rem); max-height:none; }
+  .hdr-sub { font-size:.48rem; margin-top:.25rem; }
+  .hdr-right {
+    display:grid;
+    grid-template-columns:auto;
+    justify-items:end;
+    align-self:center;
+    width:auto;
+    gap:.35rem;
+  }
+  #clock { font-size:1.25rem; }
+  .stats-bar { grid-template-columns:1.35fr repeat(4,1fr); }
+  .chip,
+  .chip:first-child {
+    grid-column:auto;
+    min-height:54px;
+    grid-template-columns:1fr;
+    align-items:center;
+    align-content:center;
+    justify-content:initial;
+    justify-items:start;
+    gap:.12rem;
+    padding:.25rem .55rem;
+    text-align:left;
+    border-left:0;
+  }
+  .chip > span:first-child { font-size:.5rem; }
+  .chip strong,
+  .chip.cgold strong,
+  .chip.cgrn strong,
+  .chip.cred strong { font-size:1.3rem; }
+  #s-best-who { display:none; }
+  .controls,
+  body.scrolled .controls {
+    grid-template-columns:minmax(180px,1fr) auto;
+    gap:.5rem;
+    padding:.42rem .55rem;
+  }
+  .search-box { grid-column:1; grid-row:1; height:38px; }
+  .toolbar-actions { grid-column:2; grid-row:1; }
 }
 
 
@@ -1373,7 +1424,6 @@ footer {
 </div>
 
 <div class="controls">
-  <div class="results-label"><span id="lbl-results">Wyniki</span><small>LIVE</small></div>
   <input class="search-box" id="srch" placeholder="🔍  Szukaj zawodnika…" oninput="render()">
   <div class="toolbar-actions">
     <button id="btn-pdf" class="hdr-btn" onclick="generateResultsPdf()" title="Pobierz wyniki PDF">PDF</button>
@@ -1450,7 +1500,7 @@ footer {
 
 <script>
 /* =========================================================
-   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.4
+   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.5
    Mechanizm danych: BU_PUBLIC_DATA > WYNIKI_HTML
    Do podmiany przed publikacją:
    1) CONFIG.csvUrl — link CSV opublikowanej zakładki WYNIKI_HTML

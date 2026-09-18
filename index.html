@@ -338,6 +338,30 @@ tbody tr.rf td:first-child { border-left: 3px solid #d9607a; }
   font-size:clamp(1.2rem,2vw,1.6rem); color:var(--orange2); text-align:center;
 }
 .ck { color:var(--text2); font-family:'JetBrains Mono',monospace; font-size:.82em; text-align:right; }
+.new-pb-cell { overflow:visible; text-overflow:clip; }
+.new-pb {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:.18rem .42rem;
+  border:1px solid rgba(210,161,29,.58);
+  border-radius:4px;
+  background:#fff8dd;
+  color:#7a5700;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.055em;
+  line-height:1;
+  white-space:nowrap;
+}
+.new-pb.debut {
+  border-color:#a6a6a6;
+  background:#f0f0f0;
+  color:#3f3f3f;
+}
+.mstat-v.new-pb-value { color:#a27300; font-size:1.28rem; }
+.mstat-v.debut-value { color:#4a4a4a; font-size:1.28rem; }
 .ct { color:var(--text2); font-family:'JetBrains Mono',monospace; font-size:.82em; }
 .flag-cell { font-size:1.3em; text-align:center; width:2.2rem; }
 .flag-emoji { display:inline-block; line-height:1; }
@@ -426,16 +450,16 @@ tbody tr.rf td:first-child { border-left: 3px solid #d9607a; }
 .mstat-s { font-size:.68rem; color:var(--muted); margin-top:.06rem; }
 
 .msec-title {
-  font-family:'Bebas Neue',sans-serif; font-size:.88rem;
+  font-family:'Bebas Neue',sans-serif; font-size:1.05rem;
   letter-spacing:.14em; color:var(--muted); text-transform:uppercase;
   margin:.85rem 0 .4rem; display:flex; align-items:center; gap:.5rem;
 }
 .msec-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-.mrow { display:flex; justify-content:space-between; font-size:.84rem; padding:.35rem 0; border-bottom:1px solid #1e1e1e; }
+.mrow { display:flex; justify-content:space-between; align-items:baseline; gap:.8rem; font-size:.96rem; line-height:1.25; padding:.42rem 0; border-bottom:1px solid #1e1e1e; }
 .mrow:last-child{border:none}
 .mrow-k { color:var(--muted); }
-.mrow-v { color:var(--text); font-weight:600; font-family:'JetBrains Mono',monospace; font-size:.78rem; }
+.mrow-v { color:var(--text); font-weight:600; font-family:'JetBrains Mono',monospace; font-size:.92rem; text-align:right; }
 
 .laps-grid {
   display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.4rem; margin-top:.3rem;
@@ -711,9 +735,9 @@ footer { text-align:center; padding:.5rem 1rem; font-size:.62rem; color:#444; le
   .mstat-l { font-size:.76rem; }
   .mstat-v { font-size:1.95rem; }
   .mstat-s { font-size:.80rem; }
-  .msec-title { font-size:1.05rem; margin:1.0rem 0 .55rem; }
-  .mrow { font-size:1.02rem; padding:.48rem 0; }
-  .mrow-v { font-size:.98rem; }
+  .msec-title { font-size:1.12rem; margin:1.0rem 0 .55rem; }
+  .mrow { font-size:1.06rem; padding:.5rem 0; }
+  .mrow-v { font-size:1.02rem; }
   .lap-note { font-size:.86rem; line-height:1.3; }
   .laps-grid { grid-template-columns:1fr; gap:.48rem; }
   .lap-item { font-size:.94rem; padding:.55rem .65rem; grid-template-columns:1.45rem 1fr; }
@@ -1336,6 +1360,13 @@ footer {
   tbody tr:hover,tbody tr:nth-child(even):hover { background:#eee; }
   tbody tr.rf,tbody tr.rf:nth-child(even) { background:#f4f0f7; box-shadow:inset 4px 0 0 #7e4b94; }
   tbody td:nth-child(7) { border-top-color:#dedede !important; }
+  tbody td.new-pb-cell {
+    display:block !important;
+    grid-column:1 / -1;
+    justify-self:start;
+    text-align:left;
+    padding-top:.16rem !important;
+  }
   .cn,.cr,.ck,.ct,.cl { color:#222; }
   footer { padding:.7rem 1rem 1rem; }
 }
@@ -1500,7 +1531,7 @@ footer {
 
 <script>
 /* =========================================================
-   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.5
+   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.7
    Mechanizm danych: BU_PUBLIC_DATA > WYNIKI_HTML
    Do podmiany przed publikacją:
    1) CONFIG.csvUrl — link CSV opublikowanej zakładki WYNIKI_HTML
@@ -1555,7 +1586,7 @@ const I18N = {
     record:'Najszybsza pętla', loopNo:'Pętla nr', starters:'Startujący', active:'Aktywni', dropped:'Odpadło', results:'Wyniki', refreshIn:'Odświeżanie za', sponsors:'Sponsorzy',
     search:'Szukaj zawodnika…', fsTitle:'Pełny ekran', langTitle:'English view', pdf:'PDF', pdfTitle:'Pobierz wyniki PDF', pdfPreparing:'Przygotowuję dokument PDF…', pdfStarted:'Pobieranie PDF rozpoczęte', pdfError:'Nie udało się wygenerować PDF.', pdfNoData:'Brak wyników do zapisania.', pdfOfficial:'OFICJALNE WYNIKI', pdfLive:'WYNIKI BIEŻĄCE', pdfClassification:'KLASYFIKACJA', pdfWinner:'Zwycięzca', pdfParticipants:'Startujący', pdfFinalLoop:'Pętla końcowa', pdfWinnerDistance:'Dystans zwycięzcy', pdfDataState:'Stan danych', pdfPage:'Strona',
     liveResults:'Wyniki na żywo', updated:'Aktualizacja:', localTime:'czas lokalny', raceTime:'czas zawodów', noResults:'Brak wyników',
-    place:'#', bib:'Nr', runner:'Zawodnik', country:'Kraj', status:'Status', loops:'Pętle', distance:'Dystans', lastLap:'Ostatnia pętla', bestLap:'Najlepsza pętla', pb:'PB', toPb:'Do PB',
+    place:'#', bib:'Nr', runner:'Zawodnik', country:'Kraj', status:'Status', loops:'Pętle', distance:'Dystans', lastLap:'Ostatnia pętla', bestLap:'Najlepsza pętla', pb:'PB', toPb:'Do PB', newPb:'✨ NOWE PB', debut:'DEBIUT',
     completed:'ukończone', totalKm:'km łącznie', runnerData:'Dane zawodnika', lapTimes:'Czasy pętli', completedLaps:'ukończonych',
     gender:'Płeć', city:'Miasto', team:'Drużyna', worstLap:'Najgorsza pętla', avgLap:'Średnia pętla', totalTime:'Suma czasów', rest:'Suma odpoczynku', pbLoops:'PB pętle', workingPlace:'Poz.', lapNote:'Czas = czas pętli. Odp. = odpoczynek od mety pętli do startu kolejnej.', lapTimeShort:'czas', restShort:'odp.',
     timeline:'Oś czasu', statusLegend:'Statusy', statusLegendTitle:'Legenda statusów', statusLegendSubtitle:'Co oznaczają skróty przy zawodnikach?', privacy:'Polityka prywatności', privacyTitle:'Polityka prywatności', privacySubtitle:'Dane w wynikach live', currentLoop:'Aktualna pętla:', timelineTitle:'Pokaż / ukryj oś czasu', sponsorsTitle:'Pokaż / ukryj sponsorów', closeSponsors:'Zamknij baner sponsorów',
@@ -1565,7 +1596,7 @@ const I18N = {
     record:'Fastest lap', loopNo:'Loop no.', starters:'Starters', active:'Active', dropped:'Out', results:'Results', refreshIn:'Refresh in', sponsors:'Sponsors',
     search:'Search runner…', fsTitle:'Fullscreen', langTitle:'Widok PL', pdf:'PDF', pdfTitle:'Download results PDF', pdfPreparing:'Preparing PDF document…', pdfStarted:'PDF download started', pdfError:'Could not generate the PDF.', pdfNoData:'No results to save.', pdfOfficial:'OFFICIAL RESULTS', pdfLive:'LIVE RESULTS', pdfClassification:'CLASSIFICATION', pdfWinner:'Winner', pdfParticipants:'Starters', pdfFinalLoop:'Final loop', pdfWinnerDistance:'Winner distance', pdfDataState:'Data updated', pdfPage:'Page',
     liveResults:'Live results', updated:'Updated:', localTime:'local time', raceTime:'race time', noResults:'No results',
-    place:'#', bib:'Bib', runner:'Runner', country:'Country', status:'Status', loops:'Loops', distance:'Distance', lastLap:'Last lap', bestLap:'Best lap', pb:'PB', toPb:'To PB',
+    place:'#', bib:'Bib', runner:'Runner', country:'Country', status:'Status', loops:'Loops', distance:'Distance', lastLap:'Last lap', bestLap:'Best lap', pb:'PB', toPb:'To PB', newPb:'✨ NEW PB', debut:'DEBUT',
     completed:'completed', totalKm:'total km', runnerData:'Runner data', lapTimes:'Lap times', completedLaps:'completed',
     gender:'Gender', city:'City', team:'Team', worstLap:'Worst lap', avgLap:'Average lap', totalTime:'Total time', rest:'Total rest', pbLoops:'PB loops', workingPlace:'Pos.', lapNote:'Lap = lap time. Rest = time from finishing a lap to the next lap start.', lapTimeShort:'lap', restShort:'rest',
     timeline:'Timeline', statusLegend:'Statuses', statusLegendTitle:'Status legend', statusLegendSubtitle:'What do the runner status abbreviations mean?', privacy:'Privacy policy', privacyTitle:'Privacy policy', privacySubtitle:'Live results data', currentLoop:'Current loop:', timelineTitle:'Show / hide timeline', sponsorsTitle:'Show / hide sponsors', closeSponsors:'Close sponsors banner',
@@ -2153,7 +2184,11 @@ function cellHtml(r,c){
   if(c.role === 'loops') return `<td class="cl">${r._loops || 0}</td>`;
   if(c.role === 'distance') return `<td class="ck">${formatKm(r._distance)} km</td>`;
   if(c.role === 'time') return `<td class="ct">${formatDuration(r[c.key]) || '–'}</td>`;
-  if(c.role === 'topb') return `<td class="ck">${formatToPb(r[c.key])}</td>`;
+  if(c.role === 'topb') {
+    if(isDebutant(r)) return `<td class="ck new-pb-cell"><span class="new-pb debut">${esc(t('debut'))}</span></td>`;
+    if(hasNewPersonalBest(r)) return `<td class="ck new-pb-cell"><span class="new-pb">${esc(t('newPb'))}</span></td>`;
+    return `<td class="ck">${formatToPb(r[c.key])}</td>`;
+  }
   return `<td class="ck">${esc(r[c.key] || '–')}</td>`;
 }
 
@@ -2395,7 +2430,9 @@ function openModal(row){
   document.getElementById('m-cl').textContent = [row[COL.city], row[COL.team]].filter(Boolean).join(' · ');
   const statusClass = ({RUN:'run', WIN:'gold', RTC:'rtc', DNC:'dnc', OVER:'over', DNF:'red', DNS:'dns', DSQ:'dsq'})[row._status] || 'dns';
   const pbValue = formatPBValue(row);
-  const toPbValue = formatToPb(row[COL.toPb]);
+  const isDebut = isDebutant(row);
+  const isNewPb = hasNewPersonalBest(row);
+  const toPbValue = isDebut ? t('debut') : (isNewPb ? t('newPb') : formatToPb(row[COL.toPb]));
   const laps = row._laps || [];
   const lapSecs = laps.map(l => l.seconds || durationToSeconds(l.time)).filter(Boolean);
   const bestSec = lapSecs.length ? Math.min(...lapSecs) : 0;
@@ -2420,7 +2457,7 @@ function openModal(row){
       <div class="mstat"><div class="mstat-l">${t('status')}</div><div class="mstat-v ${statusClass}">${esc(row._status || '–')}</div><div class="mstat-s">&nbsp;</div></div>
       <div class="mstat"><div class="mstat-l">${t('country')}</div><div class="mstat-v" style="font-size:1.9rem;line-height:1">${flagEmojiHtml(row._flag, row[COL.country]) || '–'}</div><div class="mstat-s">${esc(row[COL.country] || '')}</div></div>
       <div class="mstat"><div class="mstat-l">${t('pbLoops')}</div><div class="mstat-v">${esc(pbValue)}</div><div class="mstat-s">PB</div></div>
-      <div class="mstat"><div class="mstat-l">${t('toPb')}</div><div class="mstat-v">${esc(toPbValue)}</div><div class="mstat-s">&nbsp;</div></div>
+      <div class="mstat"><div class="mstat-l">${t('toPb')}</div><div class="mstat-v${isDebut ? ' debut-value' : (isNewPb ? ' new-pb-value' : '')}">${esc(toPbValue)}</div><div class="mstat-s">&nbsp;</div></div>
     </div>
     <div class="msec-title">${t('runnerData')}</div>
     <div>
@@ -3135,6 +3172,14 @@ function getPBValue(row){
   return 0;
 }
 function formatPBValue(row){ const pb = getPBValue(row); return pb > 0 ? String(pb) : '–'; }
+function isDebutant(row){
+  return int(row && row[COL.pb]) <= 0;
+}
+function hasNewPersonalBest(row){
+  const previousPb = int(row && row[COL.pb]);
+  const completedLoops = int(row && row[COL.loops]);
+  return previousPb > 0 && completedLoops > previousPb;
+}
 
 
 function getWinnerRow_(){

@@ -1364,6 +1364,20 @@ footer {
   text-overflow:ellipsis;
   white-space:nowrap;
 }
+.live-event-status {
+  margin:0 .08rem;
+  font-family:'JetBrains Mono',monospace;
+  font-weight:800;
+  letter-spacing:.06em;
+}
+.live-event-status.status-win { color:#f1cd62; }
+.live-event-status.status-rtc { color:#f1f1f1; }
+.live-event-status.status-dnc { color:#e5a849; }
+.live-event-status.status-over { color:#ff8a4a; }
+.live-event-status.status-dnf,
+.live-event-status.status-dsq { color:#ff6a73; }
+.live-event-status.status-dns { color:#a8a8a8; }
+.live-event-status.status-other { color:#fff; }
 .live-feed-time {
   color:#888;
   font-family:'JetBrains Mono',monospace;
@@ -1702,7 +1716,7 @@ tbody td.cl.lap-pop {
 
 <script>
 /* =========================================================
-   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.11
+   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.12
    Mechanizm danych: BU_PUBLIC_DATA > WYNIKI_HTML
    Do podmiany przed publikacją:
    1) CONFIG.csvUrl — link CSV opublikowanej zakładki WYNIKI_HTML
@@ -1793,7 +1807,8 @@ let sponsorsVisible = true;
 let liveRunnerSnapshot = new Map();
 let liveBestLapSec = Infinity;
 let liveFeedEvents = [];
-let liveFeedIndex = 0;
+let liveFeedCurrentEvent = null;
+let liveFeedQueue = [];
 let liveFxTimer = null;
 const liveRowFxUntil = new Map();
 const liveLoopFxUntil = new Map();
@@ -2327,7 +2342,7 @@ function processLiveChanges_(){
   if(!liveRunnerSnapshot.size){
     liveRunnerSnapshot = nextSnapshot;
     liveBestLapSec = nextBest.sec;
-    renderLiveFeed_();
+    pruneLiveEventsAgainstCurrentRows_();
     return;
   }
 
@@ -2362,7 +2377,7 @@ function processLiveChanges_(){
       }
     }
 
-    if(previous.status && status && status !== previous.status){
+    if(status && status !== 'RUN' && status !== previous.status){
       events.push({
         id:`status:${key}:${status}:${loops}`,
         type:'status', key, name:String(r[COL.name] || ''), loops, status, createdAt:now
@@ -2377,13 +2392,14 @@ function processLiveChanges_(){
     events.push({
       id:`fastest:${nextBest.key}:${nextBest.lap}:${nextBest.sec}`,
       type:'fastest', key:nextBest.key, name:nextBest.name, loops:nextBest.lap,
-      lap:nextBest.lap, lapTime:nextBest.time, createdAt:now
+      lap:nextBest.lap, lapTime:nextBest.time, lapSeconds:nextBest.sec, createdAt:now
     });
     if(nextBest.key) liveRowFxUntil.set(nextBest.key, fxUntil);
   }
 
   liveRunnerSnapshot = nextSnapshot;
   liveBestLapSec = nextBest.sec;
+  pruneLiveEventsAgainstCurrentRows_();
 
   if(events.length){
     const priority = {pb:0, fastest:1, status:2, lap:3};
@@ -2417,8 +2433,47 @@ function addLiveEvents_(events){
     seen.add(event.id);
     return true;
   }).slice(0, LIVE_EVENTS_MAX);
-  liveFeedIndex = 0;
+  liveFeedQueue = [...events];
+  liveFeedCurrentEvent = liveFeedQueue.shift() || liveFeedEvents[0] || null;
   saveLiveEvents_();
+  renderLiveFeed_();
+}
+
+function liveEventIsValid_(event){
+  if(!event || !event.key) return false;
+  const row = rows.find(r => runnerKey_(r) === event.key);
+  if(!row) return false;
+
+  const loops = row._loops || 0;
+  if(event.type === 'lap') return loops >= int(event.loops);
+  if(event.type === 'pb'){
+    const pb = int(row[COL.pb]);
+    return pb > 0 && loops >= int(event.loops) && loops > pb;
+  }
+  if(event.type === 'status'){
+    return !!event.status && event.status !== 'RUN' && row._status === event.status;
+  }
+  if(event.type === 'fastest'){
+    const lapNo = int(event.lap || event.loops);
+    const eventSec = int(event.lapSeconds) || durationToSeconds(event.lapTime);
+    if(loops < lapNo) return false;
+    return (row._laps || []).some(l => {
+      const lapSec = l.seconds || durationToSeconds(l.time);
+      return int(l.lap) === lapNo && (!eventSec || lapSec === eventSec);
+    });
+  }
+  return false;
+}
+
+function pruneLiveEventsAgainstCurrentRows_(){
+  const before = liveFeedEvents.length;
+  liveFeedEvents = liveFeedEvents.filter(liveEventIsValid_).slice(0, LIVE_EVENTS_MAX);
+  liveFeedQueue = liveFeedQueue.filter(liveEventIsValid_);
+
+  if(!liveEventIsValid_(liveFeedCurrentEvent)){
+    liveFeedCurrentEvent = liveFeedQueue.shift() || liveFeedEvents[0] || null;
+  }
+  if(before !== liveFeedEvents.length) saveLiveEvents_();
   renderLiveFeed_();
 }
 
@@ -2429,8 +2484,12 @@ function loadLiveEvents_(){
     liveFeedEvents = (Array.isArray(parsed) ? parsed : [])
       .filter(event => event && event.id && Number(event.createdAt) >= cutoff)
       .slice(0, LIVE_EVENTS_MAX);
+    liveFeedCurrentEvent = liveFeedEvents[0] || null;
+    liveFeedQueue = [];
   } catch(e) {
     liveFeedEvents = [];
+    liveFeedCurrentEvent = null;
+    liveFeedQueue = [];
   }
 }
 
@@ -2439,8 +2498,8 @@ function saveLiveEvents_(){
 }
 
 function rotateLiveFeed_(){
-  if(liveFeedEvents.length < 2) return;
-  liveFeedIndex = (liveFeedIndex + 1) % liveFeedEvents.length;
+  if(!liveFeedQueue.length) return;
+  liveFeedCurrentEvent = liveFeedQueue.shift();
   renderLiveFeed_();
 }
 
@@ -2472,6 +2531,14 @@ function liveEventMessage_(event){
   return name;
 }
 
+function liveStatusMessageHtml_(event){
+  const name = esc(String(event && event.name || ''));
+  const status = String(event && event.status || '').toUpperCase();
+  const statusClass = /^(WIN|RTC|DNC|OVER|DNF|DNS|DSQ)$/.test(status) ? status.toLowerCase() : 'other';
+  const count = event && event.loops ? ` · ${esc(loopCountLabel_(event.loops))}` : '';
+  return `${name} · status <span class="live-event-status status-${statusClass}">${esc(status)}</span>${count}`;
+}
+
 function formatLiveEventTime_(timestamp){
   const date = new Date(Number(timestamp) || 0);
   if(isNaN(date.getTime())) return '';
@@ -2485,7 +2552,7 @@ function renderLiveFeed_(){
   const time = document.getElementById('live-feed-time');
   if(!stage || !kind || !message || !time) return;
 
-  const event = liveFeedEvents[liveFeedIndex] || liveFeedEvents[0];
+  const event = liveFeedCurrentEvent || liveFeedEvents[0];
   if(!event){
     kind.className = 'live-feed-kind';
     kind.textContent = 'LIVE';
@@ -2494,7 +2561,8 @@ function renderLiveFeed_(){
   } else {
     kind.className = `live-feed-kind kind-${event.type}`;
     kind.textContent = liveEventKind_(event.type);
-    message.textContent = liveEventMessage_(event);
+    if(event.type === 'status') message.innerHTML = liveStatusMessageHtml_(event);
+    else message.textContent = liveEventMessage_(event);
     time.textContent = formatLiveEventTime_(event.createdAt);
   }
 

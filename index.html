@@ -1716,7 +1716,7 @@ tbody td.cl.lap-pop {
 
 <script>
 /* =========================================================
-   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.12
+   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.13
    Mechanizm danych: BU_PUBLIC_DATA > WYNIKI_HTML
    Do podmiany przed publikacją:
    1) CONFIG.csvUrl — link CSV opublikowanej zakładki WYNIKI_HTML
@@ -1809,6 +1809,7 @@ let liveBestLapSec = Infinity;
 let liveFeedEvents = [];
 let liveFeedCurrentEvent = null;
 let liveFeedQueue = [];
+let liveFeedTimer = null;
 let liveFxTimer = null;
 const liveRowFxUntil = new Map();
 const liveLoopFxUntil = new Map();
@@ -1818,7 +1819,6 @@ const PREVIOUS_LIVE_STORAGE_KEYS = ['bu_100jezior_live_results_state_v2', 'bu_10
 const LEGACY_CSV_STORAGE_KEY = 'bu_100jezior_last_good_csv';
 const LIVE_EVENTS_STORAGE_KEY = 'bu_100jezior_live_events_v1';
 const LIVE_EVENTS_MAX = 16;
-const LIVE_EVENTS_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 // Flagi pozostają emoji. Tylko Windows + Chromium/Opera, które nie potrafią
 // narysować flag państwowych, dostają lokalny odpowiednik obrazu.
@@ -1858,7 +1858,6 @@ restoreLastGoodCsv_();
 fetchData();
 setInterval(refreshCountdown, 1000);
 setInterval(updateRaceClock, 1000);
-setInterval(rotateLiveFeed_, 5200);
 window.addEventListener('focus', () => { fetchData(); countdown = CONFIG.refreshSec; });
 document.addEventListener('visibilitychange', () => { if(!document.hidden){ fetchData(); countdown = CONFIG.refreshSec; } });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('ov').classList.remove('open'); document.getElementById('legend-ov').classList.remove('open'); document.getElementById('privacy-ov').classList.remove('open'); } });
@@ -2377,7 +2376,7 @@ function processLiveChanges_(){
       }
     }
 
-    if(status && status !== 'RUN' && status !== previous.status){
+    if(status && !['RUN','DNS'].includes(status) && status !== previous.status){
       events.push({
         id:`status:${key}:${status}:${loops}`,
         type:'status', key, name:String(r[COL.name] || ''), loops, status, createdAt:now
@@ -2428,15 +2427,15 @@ function scheduleLiveFxCleanup_(){
 
 function addLiveEvents_(events){
   const seen = new Set();
-  liveFeedEvents = [...events, ...liveFeedEvents].filter(event => {
+  liveFeedEvents = events.filter(event => {
     if(!event || !event.id || seen.has(event.id)) return false;
     seen.add(event.id);
     return true;
   }).slice(0, LIVE_EVENTS_MAX);
-  liveFeedQueue = [...events];
-  liveFeedCurrentEvent = liveFeedQueue.shift() || liveFeedEvents[0] || null;
-  saveLiveEvents_();
+  liveFeedQueue = [...liveFeedEvents];
+  liveFeedCurrentEvent = liveFeedQueue.shift() || null;
   renderLiveFeed_();
+  scheduleLiveFeedAdvance_();
 }
 
 function liveEventIsValid_(event){
@@ -2451,7 +2450,7 @@ function liveEventIsValid_(event){
     return pb > 0 && loops >= int(event.loops) && loops > pb;
   }
   if(event.type === 'status'){
-    return !!event.status && event.status !== 'RUN' && row._status === event.status;
+    return !!event.status && !['RUN','DNS'].includes(event.status) && row._status === event.status;
   }
   if(event.type === 'fastest'){
     const lapNo = int(event.lap || event.loops);
@@ -2466,40 +2465,45 @@ function liveEventIsValid_(event){
 }
 
 function pruneLiveEventsAgainstCurrentRows_(){
-  const before = liveFeedEvents.length;
   liveFeedEvents = liveFeedEvents.filter(liveEventIsValid_).slice(0, LIVE_EVENTS_MAX);
   liveFeedQueue = liveFeedQueue.filter(liveEventIsValid_);
 
-  if(!liveEventIsValid_(liveFeedCurrentEvent)){
-    liveFeedCurrentEvent = liveFeedQueue.shift() || liveFeedEvents[0] || null;
+  const currentWasValid = liveEventIsValid_(liveFeedCurrentEvent);
+  if(!currentWasValid){
+    liveFeedCurrentEvent = liveFeedQueue.shift() || null;
+    renderLiveFeed_();
+    if(liveFeedCurrentEvent) scheduleLiveFeedAdvance_();
+    else stopLiveFeedTimer_();
   }
-  if(before !== liveFeedEvents.length) saveLiveEvents_();
-  renderLiveFeed_();
 }
 
 function loadLiveEvents_(){
-  try {
-    const parsed = JSON.parse(storageGet(LIVE_EVENTS_STORAGE_KEY) || '[]');
-    const cutoff = Date.now() - LIVE_EVENTS_MAX_AGE_MS;
-    liveFeedEvents = (Array.isArray(parsed) ? parsed : [])
-      .filter(event => event && event.id && Number(event.createdAt) >= cutoff)
-      .slice(0, LIVE_EVENTS_MAX);
-    liveFeedCurrentEvent = liveFeedEvents[0] || null;
-    liveFeedQueue = [];
-  } catch(e) {
-    liveFeedEvents = [];
-    liveFeedCurrentEvent = null;
-    liveFeedQueue = [];
-  }
+  liveFeedEvents = [];
+  liveFeedCurrentEvent = null;
+  liveFeedQueue = [];
+  try { localStorage.removeItem(LIVE_EVENTS_STORAGE_KEY); } catch(e) {}
 }
 
-function saveLiveEvents_(){
-  storageSet(LIVE_EVENTS_STORAGE_KEY, JSON.stringify(liveFeedEvents));
+function stopLiveFeedTimer_(){
+  if(liveFeedTimer) clearTimeout(liveFeedTimer);
+  liveFeedTimer = null;
+}
+
+function scheduleLiveFeedAdvance_(){
+  stopLiveFeedTimer_();
+  if(liveFeedCurrentEvent) liveFeedTimer = setTimeout(rotateLiveFeed_, 5200);
 }
 
 function rotateLiveFeed_(){
-  if(!liveFeedQueue.length) return;
-  liveFeedCurrentEvent = liveFeedQueue.shift();
+  if(liveFeedQueue.length){
+    liveFeedCurrentEvent = liveFeedQueue.shift();
+    renderLiveFeed_();
+    scheduleLiveFeedAdvance_();
+    return;
+  }
+  liveFeedCurrentEvent = null;
+  liveFeedEvents = [];
+  stopLiveFeedTimer_();
   renderLiveFeed_();
 }
 
@@ -2552,7 +2556,7 @@ function renderLiveFeed_(){
   const time = document.getElementById('live-feed-time');
   if(!stage || !kind || !message || !time) return;
 
-  const event = liveFeedCurrentEvent || liveFeedEvents[0];
+  const event = liveFeedCurrentEvent;
   if(!event){
     kind.className = 'live-feed-kind';
     kind.textContent = 'LIVE';
@@ -3543,7 +3547,7 @@ function privacyContentRows(){
       ['Source', 'Start list and timing/checkpoint data entered by the event staff.'],
       ['Retention', 'Results may be stored and published for as long as the event documentation and results archive are maintained.'],
       ['Your rights', 'You may request access, correction, restriction of processing or object to processing by contacting the organiser.'],
-      ['Cookies and local storage', 'The page does not use tracking cookies. Browser local storage keeps the last accepted results dataset and recent live events so the scoreboard remains useful during a temporary connection problem or page reload.'],
+      ['Cookies and local storage', 'The page does not use tracking cookies. Browser local storage keeps the last accepted results dataset so the scoreboard can remain available during a temporary connection problem.'],
       ['External services', 'Data may be loaded from Google Sheets and the page may be hosted on GitHub Pages or another static hosting service.'],
       ['Corrections', 'For correction or privacy requests, contact the event organiser.']
     ]
@@ -3559,7 +3563,7 @@ function privacyContentRows(){
       ['Źródło', 'Lista startowa oraz dane pomiarowe wprowadzane przez obsługę zawodów.'],
       ['Okres publikacji', 'Wyniki mogą być przechowywane i publikowane przez okres prowadzenia dokumentacji oraz archiwum wyników zawodów.'],
       ['Prawa osoby', 'Przysługuje prawo dostępu do danych, sprostowania, ograniczenia przetwarzania oraz wniesienia sprzeciwu przez kontakt z organizatorem.'],
-      ['Cookies i pamięć lokalna', 'Strona nie używa śledzących cookies. Pamięć lokalna przeglądarki przechowuje ostatni zaakceptowany zestaw wyników i ostatnie zdarzenia live, aby tabela działała również po przeładowaniu lub podczas chwilowego problemu z połączeniem.'],
+      ['Cookies i pamięć lokalna', 'Strona nie używa śledzących cookies. Pamięć lokalna przeglądarki przechowuje ostatni zaakceptowany zestaw wyników, aby tabela pozostała dostępna podczas chwilowego problemu z połączeniem.'],
       ['Usługi zewnętrzne', 'Dane mogą być pobierane z Google Sheets, a strona może być hostowana np. na GitHub Pages lub innym hostingu statycznym.'],
       ['Sprostowanie danych', 'W sprawie korekty lub prywatności skontaktuj się z organizatorem zawodów.']
     ]

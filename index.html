@@ -104,6 +104,7 @@ body {
 .hdr-btn:hover { border-color:var(--orange); color:var(--orange); }
 #btn-lang,#btn-pdf,#btn-timeline,#btn-legend { font-size:.72rem; letter-spacing:.08em; padding:.36rem .62rem; min-width:3.9rem; justify-content:center; }
 #btn-timeline { min-width:6.2rem; }
+#btn-timeline[aria-expanded="true"] { background:#111; border-color:#111; color:#fff; }
 #btn-legend { min-width:5.2rem; }
 #btn-fs { width:2.35rem; height:2.35rem; justify-content:center; font-size:1rem; }
 
@@ -162,40 +163,61 @@ body.scrolled .controls {
 
 /* ── TIMELINE ── */
 .timeline {
+  position:relative;
   background:#0e0e0e;
   border-bottom:1px solid var(--border);
   padding:.42rem 1.4rem .62rem;
-  overflow:hidden;
+  overflow-x:auto;
+  overflow-y:hidden;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:auto;
+  scrollbar-color:var(--orange2) #292929;
   transition:max-height .24s ease, padding .24s ease, opacity .18s ease, border-color .24s ease;
 }
+.timeline::-webkit-scrollbar { height:10px; background:#1c1c1c; }
+.timeline::-webkit-scrollbar-track { background:#292929; border:1px solid #454545; border-radius:999px; }
+.timeline::-webkit-scrollbar-thumb { background:linear-gradient(90deg,var(--orange),var(--gold)); border:2px solid #292929; border-radius:999px; min-width:48px; }
+.timeline::-webkit-scrollbar-thumb:hover { background:linear-gradient(90deg,var(--orange2),#ffe27a); }
 body.timeline-hidden .timeline {
   max-height:0; padding-top:0; padding-bottom:0; opacity:0;
   border-bottom-color:transparent; pointer-events:none;
 }
 .timeline-head {
-  display:flex; justify-content:space-between; align-items:center; gap:.75rem;
-  font-size:.92rem; color:var(--muted); letter-spacing:.12em; text-transform:uppercase;
-  margin-bottom:.10rem;
+  position:absolute; top:.2rem; left:1.4rem; right:1.4rem; z-index:0;
+  display:block; width:auto; min-width:0; height:0; margin:0;
+  color:var(--muted); letter-spacing:.12em; text-transform:uppercase;
+  pointer-events:none;
 }
-.timeline-head strong { color:var(--orange2); font-family:'JetBrains Mono',monospace; letter-spacing:.03em; }
+.timeline-head #lbl-timeline {
+  position:absolute; left:50%; top:3.45rem; transform:translate(-50%,-50%);
+  color:rgba(255,255,255,.045); font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.2rem,7vw,5rem); line-height:1; letter-spacing:.14em;
+  white-space:nowrap; user-select:none;
+}
+.timeline-head strong {
+  position:absolute; top:0; right:0; z-index:2;
+  color:var(--orange2); font-family:'JetBrains Mono',monospace;
+  font-size:.82rem; letter-spacing:.03em; white-space:nowrap;
+}
 .timeline-current-status { display:none !important; }
 .timeline-track {
-  position:relative; height:108px; margin:0 2.5rem;
+  position:relative; z-index:1; height:92px; width:max(100%,2400px); min-width:2400px; margin:0 2.5rem;
 }
 .timeline-track::before {
-  content:''; position:absolute; left:0; right:0; top:50px; height:4px;
+  content:''; position:absolute; left:0; right:0; top:21px; height:4px;
   background:#252525; border-radius:999px;
 }
 .timeline-fill {
-  position:absolute; left:0; top:50px; height:4px; width:0;
+  position:absolute; left:0; top:21px; height:4px; width:0;
   background:linear-gradient(90deg,var(--orange),var(--gold)); border-radius:999px;
   box-shadow:0 0 12px rgba(255,122,0,.25);
 }
-.tl-marker { position:absolute; top:0; transform:translateX(-50%); height:108px; min-width:28px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.tl-marker { position:absolute; top:0; transform:translateX(-50%); height:92px; min-width:28px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .tl-marker.edge-left { transform:translateX(0); }
 .tl-marker.edge-right { transform:translateX(-100%); }
 .tl-dot {
-  position:absolute; left:50%; top:38px; transform:translateX(-50%);
+  position:absolute; left:50%; top:9px; transform:translateX(-50%);
   width:25px; height:25px; display:flex; align-items:center; justify-content:center;
   font-size:1.05rem; line-height:1; border-radius:50%; background:#151515;
   border:1px solid var(--border2); box-shadow:0 0 8px rgba(0,0,0,.55);
@@ -209,8 +231,11 @@ body.timeline-hidden .timeline {
 }
 .edge-left .tl-label { left:0; transform:none; text-align:left; }
 .edge-right .tl-label { left:auto; right:0; transform:none; text-align:right; }
-.tl-below .tl-label { top:72px; }
-.tl-above .tl-label { top:4px; }
+.tl-label { top:49px; }
+.tl-label-left .tl-label { left:auto; right:calc(100% + .35rem); transform:none; text-align:right; }
+.tl-label-right .tl-label { left:calc(100% + .35rem); transform:none; text-align:left; }
+.tl-poland .tl-label { left:50%; right:auto; transform:translateX(calc(-50% - .4rem)); text-align:center; }
+.edge-right.tl-world .tl-label { left:auto; right:-2.6rem; transform:none; text-align:left; }
 .tl-start .tl-dot { color:var(--text2); }
 .tl-current .tl-dot { border-color:rgba(46,204,113,.8); box-shadow:0 0 0 1px rgba(46,204,113,.55), 0 0 12px rgba(46,204,113,.45); }
 .tl-current .tl-label { color:var(--green); font-weight:700; }
@@ -645,18 +670,16 @@ footer { text-align:center; padding:.5rem 1rem; font-size:.62rem; color:#444; le
   .controls { padding:.42rem .55rem; max-height:54px; }
   .search-box { font-size:.92rem; padding:.38rem .65rem; }
 
-  .timeline { padding:.42rem .55rem .56rem; overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; }
-  .timeline::-webkit-scrollbar { height:4px; }
-  .timeline::-webkit-scrollbar-thumb { background:var(--border2); border-radius:999px; }
-  .timeline-head { min-width:1180px; font-size:.92rem; }
-  .timeline-track { height:108px; min-width:1180px; margin:0 1.25rem; }
+  .timeline { padding:.42rem .55rem .56rem; }
+  .timeline-head { min-width:0; font-size:.92rem; }
+  .timeline-head #lbl-timeline { top:3.35rem; font-size:clamp(2rem,9vw,3.4rem); }
+  .timeline-track { height:92px; min-width:2400px; width:max(100%,2400px); margin:0 1.25rem; }
   .tl-organizer .tl-label { font-size:.60rem; max-width:78px; white-space:nowrap; }
-  .timeline-track::before, .timeline-fill { top:50px; height:4px; }
-  .tl-marker { height:108px; }
-  .tl-dot { top:38px; width:26px; height:26px; font-size:1.06rem; }
+  .timeline-track::before, .timeline-fill { top:21px; height:4px; }
+  .tl-marker { height:92px; }
+  .tl-dot { top:9px; width:26px; height:26px; font-size:1.06rem; }
   .tl-label { max-width:104px; min-width:70px; font-size:1rem; line-height:1.08; }
-  .tl-below .tl-label { top:72px; }
-  .tl-above .tl-label { top:4px; }
+  .tl-label { top:49px; }
 
   .twrap { padding:.45rem .55rem 1rem; overflow:visible; }
   table { display:block; width:100%; min-width:0; }
@@ -1664,11 +1687,23 @@ tbody td.cl.lap-pop {
   <div class="toolbar-actions">
     <button id="btn-pdf" class="hdr-btn" onclick="generateResultsPdf()" title="Pobierz wyniki PDF">PDF</button>
     <button id="btn-legend" class="hdr-btn" onclick="openStatusLegend()" title="Legenda statusów">Statusy</button>
+    <button id="btn-timeline" class="hdr-btn" onclick="toggleTimeline()" title="Pokaż / ukryj oś czasu">Oś czasu</button>
     <button id="btn-lang" class="hdr-btn" onclick="toggleLang()" title="English view">EN</button>
     <button id="btn-fs" class="hdr-btn" onclick="toggleFS()" title="Pełny ekran">⛶</button>
   </div>
 </div>
 </div>
+
+<section class="timeline" id="timeline" aria-label="Kamienie milowe">
+  <div class="timeline-head">
+    <span id="lbl-timeline">Kamienie milowe</span>
+    <strong><span id="lbl-timeline-current">Aktualna pętla:</span> <span id="timeline-current">–</span></strong>
+  </div>
+  <div class="timeline-track" id="timeline-track" aria-label="Oś czasu biegu">
+    <div class="timeline-fill" id="timeline-fill"></div>
+  </div>
+  <div class="timeline-legend" id="timeline-legend"></div>
+</section>
 
 <div class="live-feed" id="live-feed" role="status" aria-hidden="true">
   <div class="live-feed-kicker"><span class="live-feed-dot"></span><span id="live-feed-title">Ostatnie zdarzenia</span></div>
@@ -1745,7 +1780,7 @@ tbody td.cl.lap-pop {
 
 <script>
 /* =========================================================
-   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.15
+   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.18
    Mechanizm danych: BU_PUBLIC_DATA > WYNIKI_HTML
    Do podmiany przed publikacją:
    1) CONFIG.csvUrl — link CSV opublikowanej zakładki WYNIKI_HTML
@@ -1770,15 +1805,11 @@ const CONFIG = {
   timeline: {
     maxLoop: 119,
     records: {
-      womenCourse: 18,
-      course: 35,
-      orgMichal: 24,
-      orgNorbert: 51,
-      league2026: 57,
       poland: 116,
       world: 119
     },
-    distanceMarkersKm: [50, 100, 200, 500]
+    distanceMarkersKm: [50, 100, 200, 300, 400, 500, 600, 700],
+    dayMarkersHours: [24, 48]
   },
   logoUrl: 'logo-cropped.png',
   footerText: 'Backyard Ultra 100 Jezior 2026 · Live Scoreboard',
@@ -1803,8 +1834,8 @@ const I18N = {
     place:'#', bib:'Nr', runner:'Zawodnik', country:'Kraj', status:'Status', loops:'Pętle', distance:'Dystans', lastLap:'Ostatnia pętla', bestLap:'Najlepsza pętla', pb:'PB', toPb:'Do PB', newPb:'✨ NOWE PB', debut:'DEBIUT',
     completed:'ukończone', totalKm:'km łącznie', runnerData:'Dane zawodnika', lapTimes:'Czasy pętli', completedLaps:'ukończonych',
     gender:'Płeć', city:'Miasto', team:'Drużyna', worstLap:'Najgorsza pętla', avgLap:'Średnia pętla', totalTime:'Suma czasów', rest:'Suma odpoczynku', pbLoops:'PB pętle', workingPlace:'Poz.', lapNote:'Czas = czas pętli. Odp. = odpoczynek od mety pętli do startu kolejnej.', lapTimeShort:'czas', restShort:'odp.',
-    timeline:'Oś czasu', statusLegend:'Statusy', statusLegendTitle:'Legenda statusów', statusLegendSubtitle:'Co oznaczają skróty przy zawodnikach?', privacy:'Polityka prywatności', privacyTitle:'Polityka prywatności', privacySubtitle:'Dane w wynikach live', currentLoop:'Aktualna pętla:', timelineTitle:'Pokaż / ukryj oś czasu', sponsorsTitle:'Pokaż / ukryj sponsorów', closeSponsors:'Zamknij baner sponsorów',
-    start:'Start', now:'Teraz', day1:'1. doba', day2:'2. doba', womenRecord:'Rekord trasy kobiet', courseRecord:'Rekord trasy', leagueRecord:'Rekord ligi 2026', worldRecord:'Rekord świata', polandRecord:'Rekord Polski', orgMichalRecord:'Rekord organizatora Michała', orgNorbertRecord:'Rekord organizatora Norberta', riskNote:'Pobicie rekordu na własne ryzyko', day:'doba',
+    timeline:'Kamienie milowe', showTimeline:'Pokaż oś', hideTimeline:'Ukryj oś', statusLegend:'Statusy', statusLegendTitle:'Legenda statusów', statusLegendSubtitle:'Co oznaczają skróty przy zawodnikach?', privacy:'Polityka prywatności', privacyTitle:'Polityka prywatności', privacySubtitle:'Dane w wynikach live', currentLoop:'Aktualna pętla:', timelineTitle:'Pokaż / ukryj oś czasu', sponsorsTitle:'Pokaż / ukryj sponsorów', closeSponsors:'Zamknij baner sponsorów',
+    start:'Start', now:'Teraz', day1:'1. doba', day2:'2. doba', womenRecord:'Rekord trasy kobiet', courseRecord:'Rekord trasy', leagueRecord:'Najlepszy wynik ligi 2026', worldRecord:'Rekord świata', polandRecord:'Rekord Polski', orgMichalRecord:'Rekord organizatora Michała', orgNorbertRecord:'Rekord organizatora Norberta', riskNote:'Pobicie rekordu na własne ryzyko', day:'doba',
     liveFeedTitle:'Ostatnie zdarzenia', liveWaiting:'Oczekiwanie na nowe wyniki…', feedLap:'Pętla', feedPb:'Nowe PB', feedFastest:'Najszybsza', feedStatus:'Status'
   },
   en: {
@@ -1814,8 +1845,8 @@ const I18N = {
     place:'#', bib:'Bib', runner:'Runner', country:'Country', status:'Status', loops:'Loops', distance:'Distance', lastLap:'Last lap', bestLap:'Best lap', pb:'PB', toPb:'To PB', newPb:'✨ NEW PB', debut:'DEBUT',
     completed:'completed', totalKm:'total km', runnerData:'Runner data', lapTimes:'Lap times', completedLaps:'completed',
     gender:'Gender', city:'City', team:'Team', worstLap:'Worst lap', avgLap:'Average lap', totalTime:'Total time', rest:'Total rest', pbLoops:'PB loops', workingPlace:'Pos.', lapNote:'Lap = lap time. Rest = time from finishing a lap to the next lap start.', lapTimeShort:'lap', restShort:'rest',
-    timeline:'Timeline', statusLegend:'Statuses', statusLegendTitle:'Status legend', statusLegendSubtitle:'What do the runner status abbreviations mean?', privacy:'Privacy policy', privacyTitle:'Privacy policy', privacySubtitle:'Live results data', currentLoop:'Current loop:', timelineTitle:'Show / hide timeline', sponsorsTitle:'Show / hide sponsors', closeSponsors:'Close sponsors banner',
-    start:'Start', now:'Now', day1:'Day 1', day2:'Day 2', womenRecord:'Women course record', courseRecord:'Course record', leagueRecord:'League record 2026', worldRecord:'World record', polandRecord:'Polish record', orgMichalRecord:'Organizer Michał record', orgNorbertRecord:'Organizer Norbert record', riskNote:'Beat at your own risk', day:'day',
+    timeline:'Milestones', showTimeline:'Show timeline', hideTimeline:'Hide timeline', statusLegend:'Statuses', statusLegendTitle:'Status legend', statusLegendSubtitle:'What do the runner status abbreviations mean?', privacy:'Privacy policy', privacyTitle:'Privacy policy', privacySubtitle:'Live results data', currentLoop:'Current loop:', timelineTitle:'Show / hide timeline', sponsorsTitle:'Show / hide sponsors', closeSponsors:'Close sponsors banner',
+    start:'Start', now:'Now', day1:'Day 1', day2:'Day 2', womenRecord:'Women course record', courseRecord:'Course record', leagueRecord:'Best league result 2026', worldRecord:'World record', polandRecord:'Polish record', orgMichalRecord:'Organizer Michał record', orgNorbertRecord:'Organizer Norbert record', riskNote:'Beat at your own risk', day:'day',
     liveFeedTitle:'Latest events', liveWaiting:'Waiting for new results…', feedLap:'Lap', feedPb:'New PB', feedFastest:'Fastest', feedStatus:'Status'
   }
 };
@@ -1831,7 +1862,7 @@ let acceptedDataVersionMs = 0;
 let acceptedDataHash = '';
 let uiLang = 'pl';
 let lastScrollState = false;
-let timelineVisible = true;
+let timelineVisible = false;
 let sponsorsVisible = true;
 let liveRunnerSnapshot = new Map();
 let liveBestLapSec = Infinity;
@@ -2793,7 +2824,7 @@ function buildTimeline(){
   const baseMax = (CONFIG.timeline && CONFIG.timeline.maxLoop) || 119;
   const worldLoop = records.world || 119;
   const kmPerLoop = normalizeTimelineLapDistance_(meta.lapDistanceKm);
-  const distanceMarkersKm = (CONFIG.timeline && CONFIG.timeline.distanceMarkersKm) || [50,100,200,500];
+  const distanceMarkersKm = (CONFIG.timeline && CONFIG.timeline.distanceMarkersKm) || [50,100,200,300,400];
 
   const shortLabel = (type, loop, text) => {
     const langPl = uiLang === 'pl';
@@ -2801,7 +2832,7 @@ function buildTimeline(){
     if(type === 'km') return `${lp}\n${text}`;
     if(type === 'day') {
       const dayNo = Math.max(1, Math.round(Number(loop) / 24));
-      return langPl ? `${lp}\n${dayNo}. doba` : `${lp}\nDay ${dayNo}`;
+      return `${lp}\n${text || (langPl ? `${dayNo}. doba` : `Day ${dayNo}`)}`;
     }
     if(type === 'current') return langPl ? `Teraz\n${lp}` : `Now\n${lp}`;
     if(type === 'start') return langPl ? 'Start\n0 p.' : 'Start\n0 laps';
@@ -2837,38 +2868,31 @@ function buildTimeline(){
   );
   currentEl.textContent = current ? String(current) : '–';
 
-  const dayMarkers = [];
-  for(let d = 1; d * 24 < worldLoop; d++){
-    const loop = d * 24;
-    const dayText = uiLang === 'pl' ? `${d}. doba` : `Day ${d}`;
-    dayMarkers.push({
-      key:`day${d}`,
+  const dayMarkersHours = (CONFIG.timeline && CONFIG.timeline.dayMarkersHours) || [24,48];
+  const dayMarkers = dayMarkersHours.filter(hours => Number(hours) > 0 && Number(hours) < worldLoop).map(hours => {
+    const loop = Number(hours);
+    const dayText = `${loop} h`;
+    return {
+      key:`hour${loop}`,
       loop,
-      label: dayText,
+      label:dayText,
       cls:'tl-day',
       icon:'🌙',
-      short: shortLabel('day', loop, dayText)
-    });
-  }
+      short:shortLabel('day', loop, dayText)
+    };
+  });
 
-  const womenLoop = records.womenCourse || 20;
-  const courseLoop = records.course || 35;
-  const orgMichalLoop = records.orgMichal || 24;
-  const orgNorbertLoop = records.orgNorbert || 51;
-  const leagueLoop = records.league2026 || 57;
-  const polandLoop = records.poland || 116;
+  const recordMarkers = [
+    {key:'league', loop:records.league2026, label:t('leagueRecord'), cls:'tl-record', icon:'🏆', short:shortLabel('league', records.league2026)},
+    {key:'poland', loop:records.poland, label:t('polandRecord'), cls:'tl-poland', icon:'🇵🇱', short:shortLabel('poland', records.poland)},
+    {key:'world', loop:records.world, label:t('worldRecord'), cls:'tl-world', icon:'🌍', short:shortLabel('world', records.world)}
+  ].filter(m => Number.isFinite(Number(m.loop)) && Number(m.loop) > 0);
   const markerData = [
     {key:'start', loop:0, label:t('start'), cls:'tl-start', icon:'🚦', short:shortLabel('start', 0)},
     ...(current > 0 ? [{key:'current', loop:current, label:`${t('currentLoop')} ${current}`, cls:'tl-current', icon:'📍', short:shortLabel('current', current)}] : []),
     ...distanceMarkers,
-    {key:'women', loop:womenLoop, label:t('womenRecord'), cls:'tl-record', icon:'👩', short:shortLabel('women', womenLoop)},
-    {key:'orgMichal', loop:orgMichalLoop, label:t('orgMichalRecord'), cls:'tl-org tl-organizer', icon:'🧢', short:shortLabel('orgMichal', orgMichalLoop)},
     ...dayMarkers,
-    {key:'course', loop:courseLoop, label:t('courseRecord'), cls:'tl-record', icon:'🏁', short:shortLabel('course', courseLoop)},
-    {key:'orgNorbert', loop:orgNorbertLoop, label:t('orgNorbertRecord'), detail:`${t('orgNorbertRecord')}. ${t('riskNote')}.`, cls:'tl-warning tl-organizer', icon:'⚠️', short:shortLabel('orgNorbert', orgNorbertLoop)},
-    {key:'league', loop:leagueLoop, label:t('leagueRecord'), cls:'tl-record', icon:'🏆', short:shortLabel('league', leagueLoop)},
-    {key:'poland', loop:polandLoop, label:t('polandRecord'), cls:'tl-poland', icon:'🇵🇱', short:shortLabel('poland', polandLoop)},
-    {key:'world', loop:worldLoop, label:t('worldRecord'), cls:'tl-world', icon:'🌍', short:shortLabel('world', worldLoop)}
+    ...recordMarkers
   ].filter(m => m.loop !== '' && m.loop !== null && m.loop !== undefined && Number(m.loop) >= 0)
    .sort((a,b) => Number(a.loop) - Number(b.loop));
 
@@ -2884,17 +2908,19 @@ function buildTimeline(){
   }, {});
   const sameLoopSeen = {};
 
-  markerData.forEach((m, i) => {
+  markerData.forEach((m) => {
     const loopKey = String(Number(m.loop));
     const countAtLoop = sameLoopCounts[loopKey] || 1;
     const seenAtLoop = sameLoopSeen[loopKey] || 0;
     sameLoopSeen[loopKey] = seenAtLoop + 1;
     const spread = countAtLoop > 1 ? (seenAtLoop - (countAtLoop - 1) / 2) * 1.15 : 0;
     const p = Math.max(0, Math.min(100, pct(m.loop) + spread));
-    const lane = i % 2 ? 'tl-above' : 'tl-below';
+    const labelSide = countAtLoop > 1
+      ? (seenAtLoop === 0 ? ' tl-label-left' : (seenAtLoop === countAtLoop - 1 ? ' tl-label-right' : ''))
+      : '';
     const edge = p <= 1.2 ? ' edge-left' : (p >= 98.8 ? ' edge-right' : '');
     const el = document.createElement('div');
-    el.className = `tl-marker ${m.cls} ${lane}${edge}`;
+    el.className = `tl-marker ${m.cls} tl-below${labelSide}${edge}`;
     el.style.left = p + '%';
     el.title = uiLang === 'pl' ? `${m.label}: ${Math.round(Number(m.loop))} pętli` : `${m.label}: ${Math.round(Number(m.loop))} laps`;
     el.setAttribute('role', 'button');
@@ -2994,7 +3020,7 @@ function updateLabels(){
   set('lbl-timeline', t('timeline'));
   set('lbl-timeline-current', t('currentLoop'));
   const srch = document.getElementById('srch'); if (srch) srch.placeholder = '🔍  ' + t('search');
-const tl = document.getElementById('btn-timeline'); if (tl) { tl.textContent = uiLang === 'pl' ? 'Oś czasu' : 'Timeline'; tl.title = t('timelineTitle'); }
+syncTimelineToggle_();
   const pdfBtn = document.getElementById('btn-pdf'); if (pdfBtn) { pdfBtn.textContent = t('pdf'); pdfBtn.title = t('pdfTitle'); }
   const legendBtn = document.getElementById('btn-legend'); if (legendBtn) { legendBtn.textContent = t('statusLegend'); legendBtn.title = t('statusLegendTitle'); }
   const spc = document.getElementById('btn-spclose'); if (spc) spc.title = t('closeSponsors');
@@ -3650,7 +3676,7 @@ function handleScroll(){
 
 
 function loadUiPreferences(){
-  // Oś czasu ma być domyślnie ukryta po każdym świeżym otwarciu strony.
+  // Oś czasu jest domyślnie zwinięta; przycisk pozwala ją rozwinąć lub ponownie ukryć.
   // Przycisk w nagłówku działa tylko w aktualnie otwartej stronie, bez zapisywania w localStorage.
   timelineVisible = CONFIG.showTimelineDefault === true;
 
@@ -3661,7 +3687,16 @@ function loadUiPreferences(){
 function applyUiPreferences(){
   document.body.classList.toggle('timeline-hidden', !timelineVisible);
   document.body.classList.toggle('sponsors-hidden', !sponsorsVisible);
+  syncTimelineToggle_();
   setTimeout(setStickyTop, 0);
+}
+function syncTimelineToggle_(){
+  const button = document.getElementById('btn-timeline');
+  if(!button) return;
+  button.textContent = timelineVisible ? t('hideTimeline') : t('showTimeline');
+  button.title = t('timelineTitle');
+  button.setAttribute('aria-controls','timeline');
+  button.setAttribute('aria-expanded',String(timelineVisible));
 }
 function toggleTimeline(force){
   timelineVisible = typeof force === 'boolean' ? force : !timelineVisible;

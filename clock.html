@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080808">
+  <title>Backyard Ultra 100 Jezior 2026 — UltrATimer</title>
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #121212;
+      --panel-2: #191919;
+      --ink: #ffffff;
+      --muted: #bcbcbc;
+      --orange: #f3f3f3;
+      --orange-strong: #d7d7d7;
+      --red: #ff3b30;
+      --green: #55d98b;
+      --line: rgba(255,255,255,.12);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, system-ui, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.055), transparent 36%),
+        linear-gradient(180deg, #0c0c0c, #050505);
+    }
+
+    button { font: inherit; }
+
+    .screen {
+      width: 100vw;
+      height: 100svh;
+      min-height: 480px;
+      display: grid;
+      grid-template-rows: minmax(74px, 13vh) minmax(0, 1fr) minmax(120px, 22vh) minmax(58px, 9vh);
+      padding: calc(1.1vh + var(--safe-top)) calc(1.2vw + var(--safe-right)) calc(1.1vh + var(--safe-bottom)) calc(1.2vw + var(--safe-left));
+      gap: 1.1vh;
+      isolation: isolate;
+    }
+
+    .topbar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(150px, 18vh) minmax(0, 1fr) auto;
+      align-items: center;
+      gap: clamp(12px, 1.8vw, 32px);
+      padding: 0 clamp(8px, 1.2vw, 22px);
+      border: 1px solid var(--line);
+      border-radius: clamp(12px, 1.2vw, 24px);
+      background: rgba(17,17,17,.92);
+    }
+
+    .logo {
+      width: min(17vh, 190px);
+      height: min(10.5vh, 112px);
+      max-width: 100%;
+      padding: .35vh .45vw;
+      object-fit: contain;
+      display: block;
+      background: #ffffff;
+      border-radius: clamp(6px, .55vw, 11px);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.22), 0 8px 24px rgba(0,0,0,.30);
+    }
+
+    .titlebox { min-width: 0; }
+
+    .event-name {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: clamp(1.05rem, 2.25vw, 2.65rem);
+      font-weight: 950;
+      letter-spacing: .025em;
+      line-height: 1;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .event-subtitle {
+      min-height: 1.1em;
+      margin: .45vh 0 0;
+      overflow: hidden;
+      color: #d0d0d0;
+      font-size: clamp(.72rem, 1.15vw, 1.35rem);
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: .7vw;
+    }
+
+    .connection {
+      display: inline-flex;
+      align-items: center;
+      gap: .48em;
+      color: var(--muted);
+      font-size: clamp(.62rem, .86vw, 1rem);
+      font-weight: 800;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    .connection-dot {
+      width: .72em;
+      height: .72em;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 .28em rgba(85,217,139,.12);
+    }
+
+    .connection.is-hidden { display: none; }
+
+    .connection.offline .connection-dot {
+      background: var(--red);
+      box-shadow: 0 0 0 .28em rgba(255,59,48,.14);
+    }
+
+    .fullscreen {
+      width: clamp(40px, 4.4vw, 70px);
+      height: clamp(40px, 4.4vw, 70px);
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: #1a1a1a;
+      cursor: pointer;
+    }
+
+    .fullscreen:hover { border-color: #ffffff; color: #ffffff; }
+    .fullscreen svg { width: 47%; height: 47%; fill: none; stroke: currentColor; stroke-width: 2.1; }
+
+    .hero {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      padding: 1vh 2vw;
+      border: 2px solid rgba(255,255,255,.20);
+      border-radius: clamp(18px, 2vw, 38px);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.035), transparent 52%),
+        rgba(10,10,10,.95);
+      box-shadow: inset 0 0 50px rgba(0,0,0,.55), 0 12px 40px rgba(0,0,0,.32);
+      transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+
+    .hero-label {
+      margin: 0;
+      color: #f0f0f0;
+      font-size: clamp(1.35rem, 3vw, 4rem);
+      font-weight: 950;
+      letter-spacing: .06em;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .countdown {
+      width: 100%;
+      margin: .35vh 0 0;
+      color: var(--ink);
+      font-family: "Arial Black", Arial, Helvetica, sans-serif;
+      font-size: clamp(8.5rem, 24vw, 28rem);
+      font-variant-numeric: tabular-nums lining-nums;
+      font-weight: 950;
+      letter-spacing: .006em;
+      line-height: .84;
+      text-align: center;
+      text-shadow: 0 .04em .14em rgba(0,0,0,.8);
+      white-space: nowrap;
+    }
+
+    .start-date {
+      display: none;
+      margin-top: .7vh;
+      color: var(--muted);
+      font-size: clamp(.9rem, 1.55vw, 2rem);
+      font-weight: 900;
+      letter-spacing: .07em;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .start-date.show { display: block; }
+
+    .prestart-rest {
+      display: none;
+      margin-top: .35vh;
+      color: var(--ink);
+      font-size: clamp(1.6rem, 3.2vw, 4.1rem);
+      font-weight: 950;
+      letter-spacing: .08em;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .prestart-rest.show { display: block; }
+
+    .winner {
+      display: none;
+      margin-top: 1.6vh;
+      color: var(--orange);
+      font-size: clamp(1.15rem, 2.15vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: .045em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .screen.warning .hero {
+      border-color: rgba(255,255,255,.78);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), transparent 55%),
+        #0d0b08;
+      box-shadow: inset 0 0 80px rgba(255,255,255,.035), 0 0 45px rgba(255,255,255,.08);
+    }
+
+    .screen.warning .countdown { color: #ffffff; }
+
+    .screen.danger .hero {
+      border-color: var(--red);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,59,48,.24), transparent 62%),
+        #160706;
+      box-shadow: inset 0 0 100px rgba(255,59,48,.10), 0 0 50px rgba(255,59,48,.20);
+    }
+
+    .screen.danger .hero-label,
+    .screen.danger .countdown { color: #fff; }
+
+    .screen.critical .hero { animation: urgentPulse 1s ease-in-out infinite; }
+
+    @keyframes urgentPulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.16); }
+    }
+
+    .screen.finished .hero {
+      border-color: rgba(255,255,255,.72);
+      background:
+        radial-gradient(circle at 50% 48%, rgba(255,255,255,.10), transparent 55%),
+        #0d0b07;
+    }
+
+    .screen.finished .hero-label { display: none; }
+    .screen.finished .countdown {
+      max-width: 95%;
+      color: #ffffff;
+      font-size: clamp(4rem, 10vw, 11rem);
+      letter-spacing: .01em;
+      line-height: .95;
+      white-space: normal;
+    }
+    .screen.finished .winner:not(:empty) { display: block; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1vw;
+      min-height: 0;
+    }
+
+    .stat {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      padding: .8vh 1vw;
+      border: 1px solid var(--line);
+      border-radius: clamp(14px, 1.5vw, 28px);
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      text-align: center;
+    }
+
+    .stat-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(.85rem, 1.45vw, 1.85rem);
+      font-weight: 900;
+      letter-spacing: .08em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      margin: .7vh 0 0;
+      color: var(--ink);
+      font-size: clamp(3.3rem, 7vw, 8.8rem);
+      font-variant-numeric: tabular-nums lining-nums;
+      font-weight: 950;
+      letter-spacing: -.045em;
+      line-height: .88;
+    }
+
+    .stat.active .stat-value { color: var(--green); }
+    .stat.out .stat-value { color: #ff6c61; }
+    .stat.started .stat-value { color: #ffffff; }
+
+    .footerbar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1vw;
+      min-height: 0;
+    }
+
+    .footer-item {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .55em;
+      padding: .4vh 1vw;
+      border: 1px solid var(--line);
+      border-radius: clamp(12px, 1.2vw, 22px);
+      background: #101010;
+      color: var(--muted);
+      font-size: clamp(.75rem, 1.25vw, 1.55rem);
+      font-weight: 850;
+      letter-spacing: .045em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .footer-item strong {
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 1.18em;
+      font-variant-numeric: tabular-nums;
+      font-weight: 950;
+      text-overflow: ellipsis;
+    }
+
+    .message {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      bottom: calc(1.5vh + var(--safe-bottom));
+      max-width: min(92vw, 1000px);
+      transform: translate(-50%, 150%);
+      padding: .75em 1.1em;
+      border: 1px solid rgba(255,59,48,.6);
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(100,10,8,.96);
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      font-size: clamp(.72rem, 1vw, 1.1rem);
+      font-weight: 800;
+      text-align: center;
+      transition: transform .25s ease;
+    }
+
+    .message.show { transform: translate(-50%, 0); }
+
+    @media (max-aspect-ratio: 4/3) {
+      html, body { overflow: auto; }
+      .screen {
+        height: auto;
+        min-height: 100svh;
+        grid-template-rows: auto minmax(310px, 1fr) auto auto;
+        overflow: visible;
+      }
+      .topbar { grid-template-columns: 96px minmax(0, 1fr) auto; padding: 8px 10px; }
+      .logo { width: 92px; height: 58px; padding: 3px; }
+      .connection { display: none; }
+      .countdown { font-size: clamp(6.5rem, 27vw, 13rem); }
+      .prestart-rest { font-size: clamp(1.2rem, 5.2vw, 2.8rem); }
+      .stats { grid-template-columns: 1fr; }
+      .stat { min-height: 120px; }
+      .footerbar { grid-template-columns: 1fr; }
+      .footer-item { min-height: 56px; }
+    }
+
+    @media (max-height: 650px) and (min-aspect-ratio: 4/3) {
+      .screen { grid-template-rows: minmax(58px, 12vh) minmax(0, 1fr) minmax(92px, 21vh) minmax(44px, 8vh); }
+      .event-subtitle { display: none; }
+      .countdown { font-size: clamp(7rem, 23vw, 21rem); }
+    }
+
+    @media (min-aspect-ratio: 16/10) and (min-width: 1100px) {
+      .topbar { grid-template-columns: minmax(170px, 11vw) minmax(0, 1fr) auto; }
+      .logo { width: min(10.5vw, 195px); height: min(10vh, 108px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="screen" id="screen">
+    <header class="topbar">
+      <img class="logo" src="assets/logo-100-jezior.png" alt="Backyard Ultra 100 Jezior">
+      <div class="titlebox">
+        <h1 class="event-name" id="eventName">Backyard Ultra 100 Jezior 2026</h1>
+        <p class="event-subtitle" id="eventSubtitle">Ślesin · 17 października 2026 · start 14:00</p>
+      </div>
+      <div class="top-actions">
+        <div class="connection is-hidden" id="connection" title="Stan połączenia z arkuszem" aria-live="polite">
+          <span class="connection-dot"></span>
+          <span id="connectionText"></span>
+        </div>
+        <button class="fullscreen" id="fullscreenButton" type="button" aria-label="Pełny ekran" title="Pełny ekran (F)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero" aria-live="polite">
+      <p class="hero-label" id="heroLabel">DO STARTU PĘTLI <span id="nextLoop">—</span></p>
+      <div class="countdown" id="countdown">--:--</div>
+      <div class="prestart-rest" id="prestartRest"></div>
+      <div class="start-date" id="startDate"></div>
+      <div class="winner" id="winner"></div>
+    </section>
+
+    <section class="stats" aria-label="Statystyki zawodów">
+      <article class="stat active">
+        <p class="stat-label">Aktywni</p>
+        <p class="stat-value" id="activeCount">—</p>
+      </article>
+      <article class="stat out">
+        <p class="stat-label">Odpadli</p>
+        <p class="stat-value" id="outCount">—</p>
+      </article>
+      <article class="stat started">
+        <p class="stat-label">Wystartowało</p>
+        <p class="stat-value" id="startedCount">—</p>
+      </article>
+    </section>
+
+    <footer class="footerbar">
+      <div class="footer-item">Czas zawodów: <strong id="raceTime">00:00:00</strong></div>
+      <div class="footer-item" id="distanceLabel">Dystans po pętli: <strong id="distance">—</strong></div>
+    </footer>
+  </main>
+
+  <div class="message" id="message"></div>
+
+  <script>
+    "use strict";
+
+    const CONFIG = {
+      // Publiczny identyfikator BU_PUBLIC_DATA dla Backyard Ultra 100 Jezior.
+      sheetId: "2PACX-1vSQjLLwvOKmV_iWG_vnDnTGm5yjUYSqv8RYtYL4AEAVSkAML1ZFvM26TpDsz6Zt9VD-gh_oqvX0XnI8",
+
+      // WYNIKI_HTML — bezpośrednio ustawione, żeby nie skakać między zakładkami.
+      gid: "1782259513",
+
+      refreshMs: 20000,
+      requestTimeoutMs: 9000,
+      storedStateMaxAgeMs: 7 * 24 * 60 * 60 * 1000,
+      fallbackLapDistanceKm: 6.706,
+      fallbackEventName: "Backyard Ultra 100 Jezior 2026",
+      fallbackEventSubtitle: "Ślesin · 17 października 2026 · start 14:00",
+      warningSeconds: 300,
+      dangerSeconds: 60,
+      criticalSeconds: 10
+    };
+
+    const ALIASES = {
+      eventName: ["event_name", "nazwa_zawodow", "nazwa zawodów", "nazwa zawodow", "event"],
+      eventSubtitle: ["event_subtitle", "podtytul", "podtytuł", "subtitle"],
+      raceStart: ["race_start", "start_zawodow", "start zawodów", "start zawodow", "data_startu", "data startu"],
+      raceEnd: ["race_end", "event_end", "koniec_zawodow", "koniec zawodów", "koniec zawodow"],
+      raceStatus: ["race_status", "event_status", "status_zawodow", "status zawodów", "status zawodow"],
+      lapDistance: ["lap_distance_km", "dystans_petli_km", "dystans pętli km", "dystans petli km"],
+      activeLoop: ["active_loop", "aktualna_petla", "aktualna pętla", "aktualna petla"],
+      dataVersion: ["data_version", "wersja_danych", "wersja danych", "data version"],
+      lastUpdate: ["last_update", "ostatnia_aktualizacja", "ostatnia aktualizacja"],
+      name: ["zawodnik", "imię i nazwisko", "imie i nazwisko", "name", "runner", "athlete"],
+      firstName: ["imię", "imie", "first_name", "first name"],
+      lastName: ["nazwisko", "last_name", "last name", "surname"],
+      bib: ["nr startowy", "numer startowy", "bib", "nr", "number"],
+      status: ["status"],
+      loops: ["pętle", "petle", "loops", "laps", "liczba pętli", "liczba petli"]
+    };
+
+    const OUT_STATUSES = new Set(["RTC", "DNC", "OVER", "DSQ", "DNF"]);
+    const FINISHED_WORDS = new Set(["FINISHED", "ENDED", "CLOSED", "ZAKOŃCZONE", "ZAKONCZONE", "KONIEC"]);
+
+    const ui = {
+      screen: document.getElementById("screen"),
+      eventName: document.getElementById("eventName"),
+      eventSubtitle: document.getElementById("eventSubtitle"),
+      heroLabel: document.getElementById("heroLabel"),
+      nextLoop: document.getElementById("nextLoop"),
+      countdown: document.getElementById("countdown"),
+      prestartRest: document.getElementById("prestartRest"),
+      startDate: document.getElementById("startDate"),
+      winner: document.getElementById("winner"),
+      active: document.getElementById("activeCount"),
+      out: document.getElementById("outCount"),
+      started: document.getElementById("startedCount"),
+      raceTime: document.getElementById("raceTime"),
+      distance: document.getElementById("distance"),
+      distanceLabel: document.getElementById("distanceLabel"),
+      connection: document.getElementById("connection"),
+      connectionText: document.getElementById("connectionText"),
+      message: document.getElementById("message"),
+      fullscreen: document.getElementById("fullscreenButton")
+    };
+
+    let state = {
+      startMs: NaN,
+      endMs: NaN,
+      lapDistanceKm: CONFIG.fallbackLapDistanceKm,
+      eventName: CONFIG.fallbackEventName,
+      eventSubtitle: CONFIG.fallbackEventSubtitle,
+      active: 0,
+      out: 0,
+      started: 0,
+      winner: "",
+      winnerLoops: 0,
+      totalLoops: 0,
+      maxLoops: 0,
+      finished: false,
+      dataReady: false,
+      lastSuccessMs: 0,
+      sourceVersionKind: "",
+      sourceVersionValue: null,
+      sourceVersionRaw: "",
+      sourceGid: null,
+      selectedGid: CONFIG.gid
+    };
+
+    const STORAGE_KEY = `bu-clock-last-good-v2-${CONFIG.sheetId}`;
+    const DEFAULT_GID_KEY = "__default__";
+    let messageTimer = null;
+    let refreshTimer = null;
+    let wakeLock = null;
+    let refreshInFlight = false;
+    let refreshSequence = 0;
+
+    function normalizeKey(value) {
+      return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+    }
+
+    function firstValue(row, aliases) {
+      if (!row) return "";
+      const keys = Object.keys(row);
+      for (const alias of aliases) {
+        const wanted = normalizeKey(alias);
+        const found = keys.find(key => normalizeKey(key) === wanted);
+        if (found && String(row[found] ?? "").trim() !== "") return row[found];
+      }
+      return "";
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let quoted = false;
+
+      for (let i = 0; i < text.length; i += 1) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"') {
+          if (quoted && next === '"') {
+            cell += '"';
+            i += 1;
+          } else {
+            quoted = !quoted;
+          }
+        } else if (char === "," && !quoted) {
+          row.push(cell);
+          cell = "";
+        } else if ((char === "\n" || char === "\r") && !quoted) {
+          if (char === "\r" && next === "\n") i += 1;
+          row.push(cell);
+          if (row.some(value => String(value).trim() !== "")) rows.push(row);
+          row = [];
+          cell = "";
+        } else {
+          cell += char;
+        }
+      }
+
+      row.push(cell);
+      if (row.some(value => String(value).trim() !== "")) rows.push(row);
+      if (!rows.length) return [];
+
+      const headers = rows[0].map(value => String(value).trim());
+      return rows.slice(1).map(values => {
+        const result = {};
+        headers.forEach((header, index) => { result[header || `kolumna_${index + 1}`] = values[index] ?? ""; });
+        return result;
+      });
+    }
+
+    function scoreCSV(records) {
+      if (!records.length) return 0;
+      const headers = Object.keys(records[0]).map(normalizeKey);
+      const has = aliases => aliases.some(alias => headers.includes(normalizeKey(alias)));
+      let score = 0;
+      if (has(ALIASES.status)) score += 6;
+      if (has(ALIASES.loops)) score += 5;
+      if (has(ALIASES.name) || (has(ALIASES.firstName) && has(ALIASES.lastName))) score += 5;
+      if (has(ALIASES.raceStart)) score += 8;
+      if (has(ALIASES.lapDistance)) score += 3;
+      if (has(ALIASES.activeLoop)) score += 2;
+      return score;
+    }
+
+    async function fetchText(url, timeoutMs = CONFIG.requestTimeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, {
+          cache: "no-store",
+          credentials: "omit",
+          referrerPolicy: "no-referrer",
+          signal: controller.signal
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function normalizeGidKey(gid) {
+      return gid === null || gid === undefined || gid === "" ? DEFAULT_GID_KEY : String(gid);
+    }
+
+    function gidForRequest(gid) {
+      return gid === DEFAULT_GID_KEY ? null : gid;
+    }
+
+    function csvUrl(gid, requestId = 0) {
+      const requestGid = gidForRequest(gid);
+      const base = `https://docs.google.com/spreadsheets/d/e/${CONFIG.sheetId}/pub`;
+      const gidPart = requestGid === null || requestGid === undefined || requestGid === "" ? "" : `gid=${encodeURIComponent(requestGid)}&single=true&`;
+      const nonce = `${Date.now()}-${requestId}-${Math.random().toString(36).slice(2)}`;
+      return `${base}?${gidPart}output=csv&cache_bust=${encodeURIComponent(nonce)}`;
+    }
+
+    async function discoverGids(requestId) {
+      const gids = [];
+      const add = value => {
+        const v = String(value ?? "").trim();
+        if (/^\d+$/.test(v) && !gids.includes(v)) gids.push(v);
+      };
+
+      // Najpierw ostatnio poprawnie używana zakładka. Adres bez gid jest dopiero rezerwą.
+      add(CONFIG.gid);
+      add(state.selectedGid);
+      add(localStorage.getItem(`bu-clock-gid-${CONFIG.sheetId}`));
+      add("0");
+
+      try {
+        const nonce = `${Date.now()}-${requestId}-${Math.random().toString(36).slice(2)}`;
+        const html = await fetchText(`https://docs.google.com/spreadsheets/d/e/${CONFIG.sheetId}/pubhtml?cache_bust=${encodeURIComponent(nonce)}`, 7000);
+        for (const match of html.matchAll(/(?:gid=|gid%3D|"gid"\s*:\s*")(\d+)/g)) add(match[1]);
+      } catch (error) {
+        console.info("Nie udało się odczytać listy zakładek. Używam podstawowych adresów.", error);
+      }
+
+      return [...gids, null];
+    }
+
+    async function readSheet(gid, requestId) {
+      const text = await fetchText(csvUrl(gid, requestId));
+      const records = parseCSV(text);
+      return { records, score: scoreCSV(records), gid };
+    }
+
+    async function loadRecords(requestId) {
+      // Po pierwszym trafieniu nie odpytujemy co 20 sekund kilku adresów Google.
+      // Czytamy tylko zapamiętany gid. Inne adresy są używane wyłącznie po błędzie.
+      if (state.selectedGid !== null && state.selectedGid !== undefined && state.selectedGid !== "") {
+        try {
+          const direct = await readSheet(state.selectedGid, requestId);
+          if (direct.score >= 10 && direct.records.length) return direct;
+        } catch (error) {
+          console.info("Bezpośredni odczyt zapamiętanej zakładki nie udał się.", error);
+        }
+      }
+
+      const gids = await discoverGids(requestId);
+      let best = { score: -1, records: [], gid: null };
+
+      for (const gid of gids) {
+        try {
+          const candidate = await readSheet(gid, requestId);
+          const explicitGidWinsTie = candidate.score === best.score && candidate.gid !== null && best.gid === null;
+          if (candidate.score > best.score || explicitGidWinsTie) best = candidate;
+          if (candidate.score >= 21) break;
+        } catch (error) {
+          console.info("Nie udało się pobrać zakładki", gid, error);
+        }
+      }
+
+      if (best.score < 10 || !best.records.length) {
+        throw new Error("Nie znaleziono zakładki z wynikami. Ustaw CONFIG.gid na gid zakładki WYNIKI_HTML.");
+      }
+
+      const selectedKey = normalizeGidKey(best.gid);
+      state.selectedGid = selectedKey;
+      if (best.gid !== null) localStorage.setItem(`bu-clock-gid-${CONFIG.sheetId}`, String(best.gid));
+      return { ...best, gid: selectedKey };
+    }
+
+    function parseNumber(value) {
+      const cleaned = String(value ?? "").replace(/\s/g, "").replace(",", ".");
+      const number = Number(cleaned);
+      return Number.isFinite(number) ? number : NaN;
+    }
+
+    function sheetSerialToLocalMs(serial) {
+      const totalSeconds = Math.round((serial - 25569) * 86400);
+      const date = new Date(totalSeconds * 1000);
+      return new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        date.getUTCHours(),
+        date.getUTCMinutes(),
+        date.getUTCSeconds()
+      ).getTime();
+    }
+
+    function parseDate(value) {
+      if (value instanceof Date) return value.getTime();
+      if (typeof value === "number" && Number.isFinite(value)) {
+        if (value > 1e12) return value;
+        if (value > 1e9) return value * 1000;
+        if (value > 20000 && value < 100000) return sheetSerialToLocalMs(value);
+      }
+
+      const raw = String(value ?? "").trim();
+      if (!raw) return NaN;
+
+      const serial = parseNumber(raw);
+      if (Number.isFinite(serial) && serial > 20000 && serial < 100000) {
+        return sheetSerialToLocalMs(serial);
+      }
+
+      // Daty z kropkami i ukośnikami traktujemy domyślnie jako polskie DD.MM.RRRR / DD/MM/RRRR.
+      // Gdy drugi człon jest większy niż 12, zapis jest rozpoznawany jako amerykański MM/DD/RRRR.
+      const local = raw.match(/^(\d{1,2})([.\/-])(\d{1,2})\2(\d{4})(?:[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+      if (local) {
+        const [, first, separator, secondPart, year, hour = "0", minute = "0", second = "0"] = local;
+        const a = Number(first);
+        const b = Number(secondPart);
+        const useUsOrder = separator === "/" && a <= 12 && b > 12;
+        const day = useUsOrder ? b : a;
+        const month = useUsOrder ? a : b;
+        const date = new Date(Number(year), month - 1, day, Number(hour), Number(minute), Number(second));
+        if (date.getFullYear() === Number(year) && date.getMonth() === month - 1 && date.getDate() === day) return date.getTime();
+      }
+
+      const compact = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+      if (compact) {
+        const [, year, month, day, hour = "0", minute = "0", second = "0"] = compact;
+        return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second)).getTime();
+      }
+
+      const parsed = Date.parse(raw);
+      return Number.isFinite(parsed) ? parsed : NaN;
+    }
+
+    function parseSourceVersion(records) {
+      const explicitRaw = String(getMeta(records, ALIASES.dataVersion) ?? "").trim();
+      const updateRaw = String(getMeta(records, ALIASES.lastUpdate) ?? "").trim();
+      const raw = explicitRaw || updateRaw;
+      if (!raw) return { kind: "", value: null, raw: "" };
+
+      const normalizedNumber = Number(raw.replace(/\s/g, "").replace(",", "."));
+      if (Number.isFinite(normalizedNumber)) {
+        if (normalizedNumber > 1e12) return { kind: "time", value: normalizedNumber, raw };
+        if (normalizedNumber > 1e9) return { kind: "time", value: normalizedNumber * 1000, raw };
+        if (normalizedNumber > 20000 && normalizedNumber < 100000) {
+          return { kind: "time", value: sheetSerialToLocalMs(normalizedNumber), raw };
+        }
+        return { kind: "counter", value: normalizedNumber, raw };
+      }
+
+      const parsedDate = parseDate(raw);
+      if (Number.isFinite(parsedDate)) return { kind: "time", value: parsedDate, raw };
+      return { kind: "text", value: raw, raw };
+    }
+
+    function compareVersions(candidate, current) {
+      if (!candidate?.kind || candidate.value === null || candidate.value === undefined) return null;
+      if (!current?.kind || current.value === null || current.value === undefined) return 1;
+      if (candidate.kind !== current.kind) return null;
+      if (candidate.value === current.value) return 0;
+      if (candidate.kind === "text") return null;
+      return candidate.value > current.value ? 1 : -1;
+    }
+
+    function normalizeStatus(value) {
+      const status = String(value ?? "").trim().toUpperCase().replace(/\s+/g, "_");
+      if (["RUNNING", "ACTIVE", "AKTYWNY", "BIEGNIE"].includes(status)) return "RUN";
+      if (["DID_NOT_START", "NIE_WYSTARTOWAL", "NIE_WYSTARTOWAŁ"].includes(status)) return "DNS";
+      return status;
+    }
+
+    function getRunnerName(row) {
+      const full = String(firstValue(row, ALIASES.name) ?? "").trim();
+      if (full) return full;
+      return [firstValue(row, ALIASES.firstName), firstValue(row, ALIASES.lastName)]
+        .map(value => String(value ?? "").trim())
+        .filter(Boolean)
+        .join(" ");
+    }
+
+    function getMeta(records, aliases) {
+      for (const row of records) {
+        const value = firstValue(row, aliases);
+        if (String(value ?? "").trim() !== "") return value;
+      }
+      return "";
+    }
+
+    function buildState(records) {
+      const rows = records.filter(row => {
+        return Boolean(
+          getRunnerName(row) ||
+          String(firstValue(row, ALIASES.bib) ?? "").trim() ||
+          String(firstValue(row, ALIASES.status) ?? "").trim()
+        );
+      });
+
+      const runners = rows.map(row => ({
+        name: getRunnerName(row),
+        status: normalizeStatus(firstValue(row, ALIASES.status)),
+        loops: Math.max(0, Math.floor(parseNumber(firstValue(row, ALIASES.loops)) || 0))
+      }));
+
+      const startMs = parseDate(getMeta(records, ALIASES.raceStart));
+      const sourceVersion = parseSourceVersion(records);
+      const statusText = normalizeStatus(getMeta(records, ALIASES.raceStatus));
+      const explicitEndMs = parseDate(getMeta(records, ALIASES.raceEnd));
+      const lastUpdateMs = parseDate(getMeta(records, ALIASES.lastUpdate));
+      const anyWinner = runners.find(runner => runner.status === "WIN");
+      const nonDns = runners.filter(runner => runner.status !== "DNS");
+      const terminalOrWinner = nonDns.filter(runner => OUT_STATUSES.has(runner.status) || runner.status === "WIN");
+      let active = runners.filter(runner => runner.status === "RUN").length;
+
+      const finishedByStatus = FINISHED_WORDS.has(statusText);
+      const finishedByRows = Boolean(anyWinner) && nonDns.length > 0 && terminalOrWinner.length === nonDns.length;
+      const finished = finishedByStatus || finishedByRows;
+
+      // W części wdrożeń aktywny zawodnik ma pusty status. Taki fallback działa tylko w trakcie zawodów.
+      if (!finished && active === 0 && Number.isFinite(startMs) && Date.now() >= startMs) {
+        active = runners.filter(runner => {
+          return runner.status !== "DNS" && runner.status !== "WIN" && !OUT_STATUSES.has(runner.status);
+        }).length;
+      }
+
+      const lapDistance = parseNumber(getMeta(records, ALIASES.lapDistance));
+      const totalLoops = runners.reduce((sum, runner) => sum + runner.loops, 0);
+      const maxLoops = runners.reduce((max, runner) => Math.max(max, runner.loops), 0);
+      const endMs = Number.isFinite(explicitEndMs)
+        ? explicitEndMs
+        : finished && Number.isFinite(lastUpdateMs)
+          ? lastUpdateMs
+          : NaN;
+
+      return {
+        startMs,
+        endMs,
+        lapDistanceKm: Number.isFinite(lapDistance) && lapDistance > 0 ? lapDistance : CONFIG.fallbackLapDistanceKm,
+        eventName: String(getMeta(records, ALIASES.eventName) || CONFIG.fallbackEventName).trim(),
+        eventSubtitle: String(getMeta(records, ALIASES.eventSubtitle) || CONFIG.fallbackEventSubtitle).trim(),
+        active,
+        out: runners.filter(runner => OUT_STATUSES.has(runner.status)).length,
+        started: nonDns.length,
+        winner: anyWinner?.name || "",
+        winnerLoops: anyWinner?.loops || maxLoops,
+        totalLoops,
+        maxLoops,
+        finished,
+        dataReady: true,
+        lastSuccessMs: Date.now(),
+        sourceVersionKind: sourceVersion.kind,
+        sourceVersionValue: sourceVersion.value,
+        sourceVersionRaw: sourceVersion.raw
+      };
+    }
+
+    function demoState() {
+      const now = Date.now();
+      const elapsedThisHour = 3600 - (4 * 60 + 37);
+      return {
+        startMs: now - (16 * 3600 + elapsedThisHour) * 1000,
+        endMs: NaN,
+        lapDistanceKm: 6.706,
+        eventName: "Backyard Ultra 100 Jezior 2026",
+        eventSubtitle: "Ślesin · UltrATimer",
+        active: 46,
+        out: 31,
+        started: 77,
+        winner: "",
+        winnerLoops: 0,
+        totalLoops: 7 * 73,
+        maxLoops: 7,
+        finished: false,
+        dataReady: true,
+        lastSuccessMs: Date.now(),
+        sourceVersionKind: "counter",
+        sourceVersionValue: 1,
+        sourceVersionRaw: "demo"
+      };
+    }
+
+    function persistLastGoodState() {
+      try {
+        const snapshot = {
+          savedAtMs: Date.now(),
+          startMs: state.startMs,
+          endMs: state.endMs,
+          lapDistanceKm: state.lapDistanceKm,
+          eventName: state.eventName,
+          eventSubtitle: state.eventSubtitle,
+          active: state.active,
+          out: state.out,
+          started: state.started,
+          winner: state.winner,
+          winnerLoops: state.winnerLoops,
+          totalLoops: state.totalLoops,
+          maxLoops: state.maxLoops,
+          finished: state.finished,
+          dataReady: state.dataReady,
+          lastSuccessMs: state.lastSuccessMs,
+          sourceVersionKind: state.sourceVersionKind,
+          sourceVersionValue: state.sourceVersionValue,
+          sourceVersionRaw: state.sourceVersionRaw,
+          sourceGid: state.sourceGid,
+          selectedGid: state.selectedGid
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+      } catch (error) {
+        console.info("Nie udało się zapisać ostatniego poprawnego stanu.", error);
+      }
+    }
+
+    function restoreLastGoodState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+        const snapshot = JSON.parse(raw);
+        if (!snapshot || !Number.isFinite(snapshot.savedAtMs)) return false;
+        if (Date.now() - snapshot.savedAtMs > CONFIG.storedStateMaxAgeMs) return false;
+        state = { ...state, ...snapshot, dataReady: true };
+        return true;
+      } catch (error) {
+        console.info("Nie udało się odczytać ostatniego poprawnego stanu.", error);
+        return false;
+      }
+    }
+
+    function shouldAcceptCandidate(candidate, requestId, sourceGid) {
+      // Starsze wywołanie nigdy nie może nadpisać nowszego.
+      if (requestId !== refreshSequence) return false;
+
+      const candidateVersion = {
+        kind: candidate.sourceVersionKind,
+        value: candidate.sourceVersionValue
+      };
+      const currentVersion = {
+        kind: state.sourceVersionKind,
+        value: state.sourceVersionValue
+      };
+      const versionOrder = compareVersions(candidateVersion, currentVersion);
+
+      // Twarda blokada cofnięcia po data_version / last_update.
+      if (versionOrder === -1) {
+        console.warn("Odrzucono starszą wersję danych:", candidate.sourceVersionRaw, "<", state.sourceVersionRaw);
+        return false;
+      }
+
+      // Po przyjęciu wersjonowanych danych odpowiedź bez wersji nie może ich zastąpić.
+      if (state.sourceVersionKind && !candidate.sourceVersionKind) {
+        console.warn("Odrzucono odpowiedź bez wersji danych.");
+        setConnection(false, "BRAK WERSJI DANYCH");
+        return false;
+      }
+
+      // Gdy źródło nie daje wersji albo zwróciło tę samą wersję, blokujemy również
+      // oczywiste cofnięcie przebiegu zawodów. Nowsza wersja nadal może wykonać korektę wstecz.
+      if (state.dataReady && versionOrder !== 1) {
+        const obviousRegression =
+          candidate.started < state.started ||
+          candidate.totalLoops < state.totalLoops ||
+          candidate.maxLoops < state.maxLoops ||
+          (candidate.out < state.out && candidate.active > state.active);
+
+        if (obviousRegression) {
+          console.warn("Odrzucono dane cofające przebieg zawodów.");
+          return false;
+        }
+      }
+
+      // Po ustaleniu źródła inny adres może być użyty tylko, gdy nie mamy jeszcze danych.
+      if (state.dataReady && state.sourceGid !== null && sourceGid !== state.sourceGid) {
+        console.warn("Odrzucono dane z innego gid niż ostatnio zaakceptowany.");
+        setConnection(false, "INNE ŹRÓDŁO POMINIĘTE");
+        return false;
+      }
+
+      return true;
+    }
+
+    async function refreshData() {
+      if (new URLSearchParams(location.search).get("demo") === "1") {
+        state = { ...state, ...demoState() };
+        applyDataToUI();
+        setConnection(true, "TRYB DEMO");
+        return;
+      }
+
+      // Bez nakładających się odświeżeń. To usuwa wyścig, w którym wolniejsza,
+      // starsza odpowiedź kończyła się po nowszej i cofała ekran.
+      if (refreshInFlight) return;
+      refreshInFlight = true;
+      const requestId = ++refreshSequence;
+
+      try {
+        const loaded = await loadRecords(requestId);
+        const candidate = buildState(loaded.records);
+        candidate.sourceGid = loaded.gid;
+
+        if (!shouldAcceptCandidate(candidate, requestId, loaded.gid)) return;
+
+        state = {
+          ...state,
+          ...candidate,
+          selectedGid: loaded.gid,
+          sourceGid: loaded.gid
+        };
+        applyDataToUI();
+        persistLastGoodState();
+        setConnection(true, "DANE OK");
+        hideMessage();
+      } catch (error) {
+        console.error(error);
+        setConnection(false, state.dataReady ? "BŁĄD AKTUALIZACJI" : "BRAK DANYCH");
+        showMessage(error.message || "Nie udało się pobrać danych z arkusza.");
+      } finally {
+        refreshInFlight = false;
+      }
+    }
+
+    function applyDataToUI() {
+      ui.eventName.textContent = state.eventName || CONFIG.fallbackEventName;
+      ui.eventSubtitle.textContent = state.eventSubtitle || CONFIG.fallbackEventSubtitle;
+      ui.active.textContent = String(state.active);
+      ui.out.textContent = String(state.out);
+      ui.started.textContent = String(state.started);
+      ui.winner.textContent = state.winner ? `Zwycięzca: ${state.winner}` : "";
+    }
+
+    function pad2(value) { return String(value).padStart(2, "0"); }
+
+    function formatCountdown(totalSeconds) {
+      const seconds = Math.max(0, Math.ceil(totalSeconds));
+      const minutes = Math.floor(seconds / 60);
+      return `${pad2(minutes)}:${pad2(seconds % 60)}`;
+    }
+
+    function polishDayWord(days) {
+      if (days === 1) return "DZIEŃ";
+      const lastTwo = days % 100;
+      const last = days % 10;
+      if (last >= 2 && last <= 4 && !(lastTwo >= 12 && lastTwo <= 14)) return "DNI";
+      return "DNI";
+    }
+
+    function splitPreStartCountdown(totalSeconds) {
+      const seconds = Math.max(0, Math.ceil(totalSeconds));
+      if (seconds < 86400) {
+        return {
+          main: formatDuration(seconds),
+          extra: "",
+          showExtra: false,
+          showStartDate: false
+        };
+      }
+
+      const days = Math.floor(seconds / 86400);
+      const rest = seconds % 86400;
+      return {
+        main: `${days} ${polishDayWord(days)}`,
+        extra: formatDuration(rest),
+        showExtra: true,
+        showStartDate: true
+      };
+    }
+
+    function formatStartDate(timestamp) {
+      const date = new Date(timestamp);
+      const datePart = new Intl.DateTimeFormat("pl-PL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(date);
+      const timePart = new Intl.DateTimeFormat("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+      return `START: ${datePart}, ${timePart}`.toUpperCase();
+    }
+
+    function formatDuration(totalSeconds) {
+      const seconds = Math.max(0, Math.floor(totalSeconds));
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      return `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds % 60)}`;
+    }
+
+    function fitCountdown() {
+      const el = ui.countdown;
+      const hero = el?.parentElement;
+      if (!el || !hero) return;
+
+      el.style.fontSize = "";
+
+      const heroStyles = getComputedStyle(hero);
+      const heroPaddingY = (parseFloat(heroStyles.paddingTop) || 0) + (parseFloat(heroStyles.paddingBottom) || 0);
+      const availableWidth = Math.max(120, hero.clientWidth - 28);
+      const availableHeight = Math.max(80, hero.clientHeight - heroPaddingY - ui.heroLabel.offsetHeight - (ui.prestartRest.offsetHeight || 0) - (ui.startDate.offsetHeight || 0) - (ui.winner.offsetHeight || 0) - 16);
+
+      let size = parseFloat(getComputedStyle(el).fontSize) || 100;
+      let guard = 0;
+
+      // Zmniejszamy licznik tylko wtedy, gdy naprawdę nie mieści się w ramce.
+      // Priorytetem jest maksymalnie duża czcionka i normalny odstęp między cyframi.
+      while ((el.scrollWidth > availableWidth || el.scrollHeight > availableHeight * 1.08) && size > 36 && guard < 80) {
+        size -= 2;
+        el.style.fontSize = `${size}px`;
+        guard += 1;
+      }
+    }
+
+    function formatKm(value) {
+      return `${new Intl.NumberFormat("pl-PL", {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      }).format(value)} km`;
+    }
+
+    function renderClock() {
+      const now = Date.now();
+      ui.screen.classList.remove("warning", "danger", "critical", "finished");
+      ui.prestartRest.classList.remove("show");
+      ui.prestartRest.textContent = "";
+      ui.startDate.classList.remove("show");
+      ui.startDate.textContent = "";
+
+      if (!Number.isFinite(state.startMs)) {
+        ui.heroLabel.innerHTML = "BRAK CZASU STARTU";
+        ui.countdown.textContent = "--:--";
+        ui.raceTime.textContent = "00:00:00";
+        ui.distance.textContent = "—";
+        fitCountdown();
+        return;
+      }
+
+      if (state.finished) {
+        ui.screen.classList.add("finished");
+        ui.countdown.textContent = "ZAWODY ZAKOŃCZONE";
+        const end = Number.isFinite(state.endMs) ? state.endMs : now;
+        ui.raceTime.textContent = formatDuration((end - state.startMs) / 1000);
+        const finalLoop = Math.max(0, state.winnerLoops);
+        ui.distanceLabel.firstChild.textContent = finalLoop ? `Dystans po pętli ${finalLoop}: ` : "Dystans zwycięzcy: ";
+        ui.distance.textContent = finalLoop ? formatKm(finalLoop * state.lapDistanceKm) : "—";
+        fitCountdown();
+        return;
+      }
+
+      if (now < state.startMs) {
+        const remaining = (state.startMs - now) / 1000;
+        const preStart = splitPreStartCountdown(remaining);
+        ui.heroLabel.innerHTML = `DO STARTU ZAWODÓW <span id="nextLoop">· PĘTLA 1</span>`;
+        ui.countdown.textContent = preStart.main;
+        if (preStart.showExtra) {
+          ui.prestartRest.textContent = preStart.extra;
+          ui.prestartRest.classList.add("show");
+        }
+        if (preStart.showStartDate) {
+          ui.startDate.textContent = formatStartDate(state.startMs);
+          ui.startDate.classList.add("show");
+        }
+        ui.raceTime.textContent = "00:00:00";
+        ui.distanceLabel.firstChild.textContent = "Pętla 1 · po ukończeniu: ";
+        ui.distance.textContent = formatKm(state.lapDistanceKm);
+        setUrgency(remaining);
+        fitCountdown();
+        return;
+      }
+
+      const elapsed = Math.max(0, Math.floor((now - state.startMs) / 1000));
+      const secondsIntoLoop = elapsed % 3600;
+      const remaining = secondsIntoLoop === 0 ? 3600 : 3600 - secondsIntoLoop;
+      const currentLoop = Math.floor(elapsed / 3600) + 1;
+      const nextLoop = currentLoop + 1;
+
+      ui.heroLabel.innerHTML = `DO STARTU PĘTLI <span id="nextLoop">${nextLoop}</span>`;
+      ui.countdown.textContent = formatCountdown(remaining);
+      ui.raceTime.textContent = formatDuration(elapsed);
+      ui.distanceLabel.firstChild.textContent = `Trwa pętla ${currentLoop} · po ukończeniu: `;
+      ui.distance.textContent = formatKm(currentLoop * state.lapDistanceKm);
+      setUrgency(remaining);
+      fitCountdown();
+    }
+
+    function setUrgency(remainingSeconds) {
+      if (remainingSeconds < CONFIG.dangerSeconds) ui.screen.classList.add("danger");
+      else if (remainingSeconds <= CONFIG.warningSeconds) ui.screen.classList.add("warning");
+      if (remainingSeconds <= CONFIG.criticalSeconds) ui.screen.classList.add("critical");
+    }
+
+    function setConnection(ok, text) {
+      const hideNormalSuccess = ok && text === "DANE OK";
+      ui.connection.classList.toggle("is-hidden", hideNormalSuccess);
+      ui.connection.classList.toggle("offline", !ok);
+      ui.connectionText.textContent = hideNormalSuccess ? "" : text;
+    }
+
+    function showMessage(text) {
+      clearTimeout(messageTimer);
+      ui.message.textContent = text;
+      ui.message.classList.add("show");
+      messageTimer = setTimeout(() => ui.message.classList.remove("show"), 12000);
+    }
+
+    function hideMessage() {
+      clearTimeout(messageTimer);
+      ui.message.classList.remove("show");
+    }
+
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+        else await document.exitFullscreen();
+      } catch (error) {
+        showMessage("Przeglądarka zablokowała pełny ekran. Użyj klawisza F11.");
+      }
+    }
+
+    async function requestWakeLock() {
+      if (!("wakeLock" in navigator)) return;
+      try { wakeLock = await navigator.wakeLock.request("screen"); }
+      catch (error) { console.info("Wake Lock niedostępny", error); }
+    }
+
+    ui.fullscreen.addEventListener("click", toggleFullscreen);
+    document.addEventListener("keydown", event => {
+      if (event.key.toLowerCase() === "f" && !event.ctrlKey && !event.metaKey && !event.altKey) toggleFullscreen();
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") requestWakeLock();
+    });
+    window.addEventListener("resize", fitCountdown);
+
+    restoreLastGoodState();
+    applyDataToUI();
+    refreshData();
+    renderClock();
+    requestWakeLock();
+    setInterval(renderClock, 250);
+    refreshTimer = setInterval(refreshData, CONFIG.refreshMs);
+  </script>
+</body>
+</html>

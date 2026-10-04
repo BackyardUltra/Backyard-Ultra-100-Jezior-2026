@@ -1652,6 +1652,147 @@ tbody td.cl.lap-pop {
 }
 
 
+/* ── FUNKCJE WIDZA ── */
+.stats-bar { grid-template-columns:1.55fr repeat(4,minmax(0,1fr)) minmax(200px,1.65fr); }
+.controls,body.scrolled .controls { grid-template-columns:minmax(240px,510px) minmax(120px,1fr) auto; }
+.search-controls { display:flex; align-items:center; gap:.55rem; min-width:0; grid-column:1; }
+.search-controls .search-box { min-width:0; max-width:360px; flex:1; }
+.search-controls .watch-filter { flex-shrink:0; }
+.hdr-update-details::before { content:' · '; }
+.watch-filter { grid-column:2; justify-self:start; display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .65rem; font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:600; white-space:nowrap; }
+.watch-filter-icon { color:#9a710e; font-size:1.05rem; }
+.watch-filter-count { min-width:1.4rem; text-align:center; padding:.08rem .25rem; border-radius:3px; background:#efefef; color:#333; font-family:'JetBrains Mono',monospace; font-size:.72rem; }
+.watch-filter.is-active { background:#111; border-color:#111; color:#fff; }
+.watch-filter.is-active .watch-filter-icon { color:#f6ce58; }
+.watch-filter.is-active .watch-filter-count { color:#ffe191; background:#36312a; }
+.watch-filter:focus-visible,.watch-star:focus-visible,.insight-button:focus-visible,.spectator-tab:focus-visible,.spectator-runner-main:focus-visible { outline:2px solid #bb8300; outline-offset:2px; }
+.cn-line { display:flex; align-items:center; gap:.35rem; min-width:0; }
+.cn-copy { min-width:0; flex:1; }
+.cn-name { display:block; }
+.watch-star { display:inline-flex; flex-shrink:0; width:28px; height:28px; align-items:center; justify-content:center; background:transparent; border:1px solid transparent; border-radius:4px; cursor:pointer; color:#777; padding:3px; }
+.watch-star svg { display:block; width:19px; height:19px; fill:transparent; stroke:currentColor; stroke-width:1.8; stroke-linejoin:round; }
+.watch-star:hover { color:#966500; background:#fff5d6; }
+.watch-star.is-watched { color:#9a6a00; background:#fff5d6; border-color:#e3c26e; }
+.watch-star.is-watched svg { fill:#f6ce58; }
+.watch-star-mobile { display:none; }
+.insight-button { position:relative; display:flex; align-items:center; justify-content:space-between; gap:.6rem; min-width:0; min-height:38px; padding:.22rem .65rem; background:#fff; color:#171717; border:0; border-radius:0; text-align:left; font-family:'Barlow Condensed',sans-serif; cursor:pointer; }
+#btn-loop-finish { grid-column:2; min-height:34px; padding:.15rem .4rem; }
+.insight-button:hover:not(:disabled) { background:#f3f3f3; }
+.insight-button:disabled { cursor:default; }
+.insight-content { min-width:0; display:flex; align-items:baseline; flex-wrap:wrap; gap:.25rem .55rem; }
+.insight-label { font-size:.82rem; font-weight:500; color:#515151; line-height:1.05; }
+.insight-label-short { display:none; }
+.insight-value { display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap; }
+.insight-value strong,#next-goal-value { font-size:1.14rem; line-height:1.08; font-weight:700; }
+.insight-value small { font-size:.82rem; color:#555; }
+.insight-chevron { flex-shrink:0; color:#777; font-size:1.5rem; line-height:1; }
+#btn-next-goal::after { content:''; position:absolute; left:0; bottom:0; width:var(--goal-progress,0%); height:2px; background:#c19534; pointer-events:none; }
+#btn-next-goal { min-height:60px; padding:.2rem 1rem; color:#fff; background:transparent; border-left:1px solid #363636; border-right:1px solid #363636; }
+#btn-next-goal:hover:not(:disabled) { background:#222; }
+#btn-next-goal .insight-content { display:grid; grid-template-columns:minmax(0,1fr); align-items:center; gap:.2rem; }
+#btn-next-goal .insight-label { color:#c8c8c8; }
+#btn-next-goal .insight-chevron { color:#aaa; }
+.spectator-modal { max-width:760px; }
+.spectator-tabs { display:flex; flex-wrap:wrap; gap:.45rem; margin-bottom:.65rem; }
+.spectator-tab { display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .65rem; background:#f3f3f3; color:#333; border:1px solid #c8c8c8; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-size:1rem; cursor:pointer; }
+.spectator-tab.is-active { background:#111; color:#fff; border-color:#111; }
+.spectator-tab strong { font-family:'JetBrains Mono',monospace; font-size:.8em; }
+.spectator-note,.spectator-empty { margin:.55rem 0 .8rem; color:#515151; font-size:1.03rem; line-height:1.35; }
+.spectator-empty { padding:.7rem 0; }
+.spectator-runners { display:grid; gap:.45rem; }
+.spectator-runner { display:flex; align-items:center; gap:.35rem; min-width:0; padding-right:.4rem; background:#f7f7f7; border:1px solid #dedede; border-radius:5px; }
+.spectator-runner-main { display:grid; grid-template-columns:36px 28px minmax(0,1fr) auto; gap:.6rem; align-items:center; flex:1; min-width:0; padding:.6rem .55rem; border:0; background:transparent; color:#222; font-family:'Barlow Condensed',sans-serif; text-align:left; cursor:pointer; }
+.spectator-runner-main:hover { background:#eee; }
+.spectator-bib { font-family:'JetBrains Mono',monospace; font-size:.9rem; color:#666; text-align:center; }
+.spectator-runner-name { font-size:1.12rem; font-weight:700; line-height:1.1; overflow-wrap:anywhere; }
+.spectator-runner-name small { display:block; margin-top:.22rem; font-family:'JetBrains Mono',monospace; font-size:.75rem; font-weight:400; color:#555; }
+.spectator-runner-main .flag-emoji-img { width:25px; height:auto; }
+.spectator-runner-main .flag-emoji { font-size:1.4rem; }
+.spectator-runner > .watch-star { margin-right:.15rem; }
+.goal-select-label { display:block; color:#555; font-size:1rem; margin-bottom:.35rem; }
+.spectator-goal-select { width:100%; padding:.55rem .6rem; background:#fff; color:#171717; border:1px solid #bdbdbd; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-size:1.12rem; }
+.spectator-goal-summary { display:flex; align-items:center; flex-wrap:wrap; gap:.45rem .9rem; margin:.75rem 0; padding:.65rem .8rem; background:#f7f3e9; border:1px solid #dfc887; border-radius:5px; color:#3a321f; font-size:1.1rem; }
+.spectator-goal-summary strong { font-size:1.35rem; }
+.table-empty-action { display:inline-block; margin-top:.7rem; padding:.35rem .7rem; color:#fff; background:#111; border:1px solid #111; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-size:1rem; cursor:pointer; }
+tbody tr.table-message { display:block !important; }
+tbody tr.table-message td.tmsg { display:block; }
+tbody tr.table-message td.tmsg::before { display:none !important; }
+
+@media(max-width:980px){
+  .controls,body.scrolled .controls { grid-template-columns:minmax(190px,1fr) minmax(95px,auto) auto; gap:.45rem; }
+  .stats-bar { grid-template-columns:1.35fr repeat(4,minmax(0,1fr)) minmax(150px,1.6fr); }
+  .toolbar-actions { grid-column:3; }
+  .watch-filter { padding:.25rem .5rem; }
+}
+@media (max-width:760px), (orientation:landscape) and (max-width:1100px) and (max-height:600px){
+  .hdr { min-height:116px; padding:.42rem .6rem; }
+  .stats-bar { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .chip { min-height:58px; padding:.18rem .18rem; gap:.1rem; }
+  .chip:first-child { grid-column:1 / 3; grid-row:1; min-height:38px; grid-template-columns:minmax(0,1fr) auto; justify-items:start; text-align:left; gap:.1rem .45rem; padding:.18rem .6rem; }
+  .chip:first-child > span:first-child { grid-column:1; }
+  .chip:first-child #s-best { grid-column:2; white-space:nowrap; }
+  .chip > span:first-child { letter-spacing:.09em; }
+  #s-best-who { grid-column:1 / -1; width:100%; max-width:100%; font-size:.72rem; text-align:left; }
+  .hdr-event-details,.hdr-update-details { display:block; }
+  .hdr-update-details::before { content:none; }
+  .controls,body.scrolled .controls { grid-template-columns:minmax(0,1fr) auto; gap:.3rem; padding:.25rem .6rem; }
+  .search-controls { grid-column:1 / -1; grid-row:2; }
+  .search-controls .search-box { max-width:none; height:34px; padding:.3rem .7rem; }
+  .watch-filter { min-width:44px; height:34px; padding:.2rem .3rem; font-size:.9rem; gap:.3rem; justify-content:center; }
+  #btn-loop-finish { grid-column:1; grid-row:1; }
+  #lbl-watched { display:none; }
+  .toolbar-actions { grid-column:2; grid-row:1; flex-wrap:wrap; gap:.25rem; }
+  #btn-lang,#btn-pdf,#btn-legend,#btn-timeline { font-size:.68rem; letter-spacing:.035em; }
+  body.has-topb .cn .watch-star { display:none; }
+  .watch-star-mobile { display:inline-flex; width:24px; height:24px; margin-right:.35rem; padding:2px; }
+  .cn-name { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .insight-button { padding:.2rem .4rem; gap:.3rem; min-height:32px; }
+  .insight-content { display:flex; align-items:baseline; flex-wrap:wrap; gap:.12rem .4rem; flex:1; }
+  .insight-label { font-size:.9rem; line-height:1.1; color:#454545; }
+  #btn-next-goal { grid-column:3 / -1; grid-row:1; min-height:38px; padding:.25rem .55rem; }
+  #btn-next-goal .insight-label { font-size:.82rem; }
+  #btn-next-goal .insight-content { gap:.12rem; }
+  .insight-value { display:contents; }
+  #finish-count { white-space:nowrap; }
+  #finish-loop { display:none; }
+  .insight-value strong,#next-goal-value { font-size:1.1rem; }
+  .insight-value small { font-size:.88rem; }
+  #next-goal-value { overflow-wrap:anywhere; }
+  .insight-chevron { font-size:1.25rem; }
+  .spectator-runner-main { grid-template-columns:28px 24px minmax(0,1fr) auto; gap:.35rem; padding:.55rem .4rem; }
+  .spectator-runner-name { font-size:1.16rem; }
+  .spectator-tab { font-size:1.05rem; padding:.4rem .5rem; }
+  .spectator-note,.spectator-empty { font-size:1.12rem; }
+}
+@media (orientation:landscape) and (max-width:1100px) and (max-height:600px){
+  .hdr { min-height:92px; padding:.4rem .6rem; }
+  .stats-bar { grid-template-columns:1.35fr repeat(4,minmax(0,1fr)) minmax(140px,1.6fr); }
+  .chip,.chip:first-child { grid-column:auto; min-height:54px; grid-template-columns:1fr; gap:.12rem; padding:.25rem .55rem; }
+  .chip:first-child { grid-row:auto; }
+  .chip:first-child > span:first-child,.chip:first-child #s-best { grid-column:auto; }
+  #btn-next-goal { grid-column:auto; grid-row:auto; min-height:54px; }
+  .controls,body.scrolled .controls { grid-template-columns:minmax(0,1fr) minmax(70px,auto) auto; }
+  .search-controls { grid-column:1; grid-row:1; }
+  #btn-loop-finish { grid-column:2; grid-row:1; }
+  .watch-filter { height:34px; }
+  .toolbar-actions { grid-column:3; grid-row:1; }
+}
+
+/* Podpowiedź przesuwania zajmuje wyłącznie obszar już otwartej osi. */
+.timeline-shell { position:relative; min-width:0; }
+.timeline-swipe-hint { position:absolute; z-index:5; top:.6rem; left:50%; transform:translateX(-50%); display:grid; justify-items:center; gap:.1rem; padding:.3rem .8rem .45rem; color:#fff; background:rgba(8,8,8,.94); border:1px solid #666; border-radius:8px; box-shadow:0 3px 15px rgba(0,0,0,.35); pointer-events:none; user-select:none; }
+.timeline-swipe-hint[hidden],body.timeline-hidden .timeline-swipe-hint { display:none !important; }
+.timeline-swipe-hint svg { display:block; width:76px; height:46px; overflow:visible; }
+.timeline-swipe-hint span { font-size:1rem; font-weight:600; line-height:1.1; white-space:nowrap; }
+.timeline-swipe-hand { animation:timeline-hand-swipe 1.45s ease-in-out infinite; }
+.timeline:focus-visible { outline:2px solid #d2a11d; outline-offset:-2px; }
+@keyframes timeline-hand-swipe { 0%,100% { transform:translateX(-8px); } 50% { transform:translateX(8px); } }
+@media (prefers-reduced-motion:reduce) { .timeline-swipe-hand { animation:none; } }
+@media (hover:hover) and (pointer:fine) {
+  .timeline { cursor:grab; user-select:none; }
+  .timeline.is-dragging,.timeline.is-dragging .tl-marker { cursor:grabbing; }
+}
+
 </style>
 </head>
 <body>
@@ -1661,7 +1802,7 @@ tbody td.cl.lap-pop {
   <img class="hdr-logo" src="logo-cropped.png" alt="Backyard Ultra 100 Jezior" onerror="this.style.display='none'">
   <div class="hdr-titles">
     <div class="hdr-name">Backyard Ultra 100 Jezior 2026</div>
-    <div class="hdr-sub">Wyniki na żywo · Aktualizacja: <span id="upd-time">–</span></div>
+    <div class="hdr-sub"><span class="hdr-event-details">Ślesin · 17 października 2026 · start 14:00</span><span class="hdr-update-details">Aktualizacja: <span id="upd-time">–</span></span></div>
   </div>
   <div class="hdr-right">
     <div class="live-badge"><div class="live-dot"></div>LIVE</div>
@@ -1675,6 +1816,9 @@ tbody td.cl.lap-pop {
   <div class="chip"><span id="lbl-starters">Startujący</span><strong id="s-tot">–</strong></div>
   <div class="chip cgrn"><span id="lbl-active">Aktywni</span><strong id="s-act">–</strong></div>
   <div class="chip cred"><span id="lbl-dropped">Odpadło</span><strong id="s-dnf">–</strong></div>
+  <button id="btn-next-goal" type="button" class="insight-button" onclick="openSpectatorPanel('goal')" disabled>
+    <span class="insight-content"><span class="insight-label" id="lbl-next-goal">Najbliższy cel</span><span class="insight-label insight-label-short" id="lbl-next-goal-short" aria-hidden="true">Cel</span><strong id="next-goal-value">–</strong></span><span class="insight-chevron" aria-hidden="true">›</span>
+  </button>
 </div>
 
 <div class="rfrow">
@@ -1683,7 +1827,13 @@ tbody td.cl.lap-pop {
 </div>
 
 <div class="controls">
+  <div class="search-controls">
   <input class="search-box" id="srch" placeholder="🔍  Szukaj zawodnika…" oninput="render()">
+  <button id="btn-watched" type="button" class="hdr-btn watch-filter" onclick="toggleWatchedFilter()" aria-pressed="false"><span class="watch-filter-icon" aria-hidden="true">★</span><span id="lbl-watched">Obserwowani</span><span id="watched-count" class="watch-filter-count">0</span></button>
+  </div>
+  <button id="btn-loop-finish" type="button" class="insight-button" onclick="openSpectatorPanel('loop')" disabled>
+    <span class="insight-content"><span class="insight-label" id="lbl-finish">Na mecie</span><span class="insight-value"><strong id="finish-count" aria-live="polite">–</strong><small id="finish-loop">Oczekiwanie na wyniki</small></span></span><span class="insight-chevron" aria-hidden="true">›</span>
+  </button>
   <div class="toolbar-actions">
     <button id="btn-pdf" class="hdr-btn" onclick="generateResultsPdf()" title="Pobierz wyniki PDF">PDF</button>
     <button id="btn-legend" class="hdr-btn" onclick="openStatusLegend()" title="Legenda statusów">Statusy</button>
@@ -1694,7 +1844,8 @@ tbody td.cl.lap-pop {
 </div>
 </div>
 
-<section class="timeline" id="timeline" aria-label="Kamienie milowe">
+<div class="timeline-shell">
+<section class="timeline" id="timeline" aria-label="Kamienie milowe" tabindex="0">
   <div class="timeline-head">
     <span id="lbl-timeline">Kamienie milowe</span>
     <strong><span id="lbl-timeline-current">Aktualna pętla:</span> <span id="timeline-current">–</span></strong>
@@ -1704,6 +1855,14 @@ tbody td.cl.lap-pop {
   </div>
   <div class="timeline-legend" id="timeline-legend"></div>
 </section>
+<div class="timeline-swipe-hint" id="timeline-swipe-hint" role="status" aria-live="polite" aria-atomic="true" hidden>
+  <svg viewBox="0 0 80 54" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 25h14M11 20l-5 5 5 5M60 25h14M69 20l5 5-5 5" opacity=".65"/>
+    <g class="timeline-swipe-hand"><path d="M34 30V13a4 4 0 0 1 8 0v13l2-1a3 3 0 0 1 5 3l2-1a3 3 0 0 1 5 3l1 1a3 3 0 0 1 5 3l-4 10a9 9 0 0 1-8 6H39a8 8 0 0 1-7-4l-8-12a4 4 0 0 1 6-5l4 5"/></g>
+  </svg>
+  <span id="timeline-swipe-label">Przesuń oś w bok</span>
+</div>
+</div>
 
 <div class="live-feed" id="live-feed" role="status" aria-hidden="true">
   <div class="live-feed-kicker"><span class="live-feed-dot"></span><span id="live-feed-title">Ostatnie zdarzenia</span></div>
@@ -1776,11 +1935,21 @@ tbody td.cl.lap-pop {
   </div>
 </div>
 
+<div class="overlay" id="spectator-ov" onclick="closeSpectatorPanel(event)">
+  <div class="modal spectator-modal" role="dialog" aria-modal="true" aria-labelledby="spectator-title">
+    <div class="mhdr">
+      <div><div class="mname" id="spectator-title">Bieżąca pętla</div><div class="mclub" id="spectator-subtitle"></div></div>
+      <button type="button" class="mcls" id="spectator-close" onclick="closeSpectatorPanel()" aria-label="Zamknij okno">✕</button>
+    </div>
+    <div class="mbody" id="spectator-body"></div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 /* =========================================================
-   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.18
+   BACKYARD ULTRA 100 JEZIOR LIVE SCOREBOARD v2.22
    Mechanizm danych: BU_PUBLIC_DATA > WYNIKI_HTML
    Do podmiany przed publikacją:
    1) CONFIG.csvUrl — link CSV opublikowanej zakładki WYNIKI_HTML
@@ -1836,7 +2005,10 @@ const I18N = {
     gender:'Płeć', city:'Miasto', team:'Drużyna', worstLap:'Najgorsza pętla', avgLap:'Średnia pętla', totalTime:'Suma czasów', rest:'Suma odpoczynku', pbLoops:'PB pętle', workingPlace:'Poz.', lapNote:'Czas = czas pętli. Odp. = odpoczynek od mety pętli do startu kolejnej.', lapTimeShort:'czas', restShort:'odp.',
     timeline:'Kamienie milowe', showTimeline:'Pokaż oś', hideTimeline:'Ukryj oś', statusLegend:'Statusy', statusLegendTitle:'Legenda statusów', statusLegendSubtitle:'Co oznaczają skróty przy zawodnikach?', privacy:'Polityka prywatności', privacyTitle:'Polityka prywatności', privacySubtitle:'Dane w wynikach live', currentLoop:'Aktualna pętla:', timelineTitle:'Pokaż / ukryj oś czasu', sponsorsTitle:'Pokaż / ukryj sponsorów', closeSponsors:'Zamknij baner sponsorów',
     start:'Start', now:'Teraz', day1:'1. doba', day2:'2. doba', womenRecord:'Rekord trasy kobiet', courseRecord:'Rekord trasy', leagueRecord:'Najlepszy wynik ligi 2026', worldRecord:'Rekord świata', polandRecord:'Rekord Polski', orgMichalRecord:'Rekord organizatora Michała', orgNorbertRecord:'Rekord organizatora Norberta', riskNote:'Pobicie rekordu na własne ryzyko', day:'doba',
-    liveFeedTitle:'Ostatnie zdarzenia', liveWaiting:'Oczekiwanie na nowe wyniki…', feedLap:'Pętla', feedPb:'Nowe PB', feedFastest:'Najszybsza', feedStatus:'Status'
+    liveFeedTitle:'Ostatnie zdarzenia', liveWaiting:'Oczekiwanie na nowe wyniki…', feedLap:'Pętla', feedPb:'Nowe PB', feedFastest:'Najszybsza', feedStatus:'Status',
+    watched:'Obserwowani', watchRunner:'Obserwuj zawodnika', unwatchRunner:'Przestań obserwować', showAllRunners:'Pokaż wszystkich', showWatchedRunners:'Pokaż tylko obserwowanych', noWatchedRunners:'Nie obserwujesz jeszcze żadnego zawodnika.', watchEmptyHint:'Zaznacz gwiazdką wybrane osoby w tabeli.',
+    atFinish:'Na mecie', ofTotal:'z', beforeStart:'Przed startem', waitingResults:'Oczekiwanie na wyniki', viewLoopResults:'Pokaż wyniki tej pętli', partialResults:'niepełne wyniki', recordedLoopResults:'Zapisane wyniki bieżącej pętli', alreadyFinished:'Ukończyli', awaitingResult:'Oczekujemy', outThisLoop:'Odpadli', countedFinishesOnly:'Pokazujemy wyłącznie zaliczone ukończenia tej pętli.', awaitingResultNote:'Brak zapisanego ukończenia tej pętli. Lista nie potwierdza bieżącego położenia zawodnika.', outThisLoopNote:'Zakończyli rywalizację bez zaliczenia tej pętli. DNS i odmowa startu na tę pętlę (RTC) są pomijane.', partialResultsNote:'Pełna liczba uczestników tej pętli nie jest jeszcze potwierdzona w wynikach.', loopGroups:'Grupy wyników pętli', noRunnersInGroup:'Brak zawodników w tej grupie.', closeWindow:'Zamknij okno',
+    nextGoal:'Najbliższy cel', nextGoalShort:'Cel', reachedGoalShort:'Cele', timelineSwipe:'Przesuń oś w bok', reachedGoals:'Osiągnięte cele', goalReached:'osiągnięty', raceEnded:'Zawody zakończone', viewGoals:'Pokaż cele i zawodników, którzy je osiągnęli', goalsByCountedLoops:'Progi liczone z zaliczonych pętli', chooseGoal:'Wybierz próg', leadingResult:'Największy wynik', runnersReached:'Osiągnęli ten próg', noGoalReachedYet:'Ten próg nie został jeszcze osiągnięty.'
   },
   en: {
     record:'Fastest lap', loopNo:'Loop no.', starters:'Starters', active:'Active', dropped:'Out', results:'Results', refreshIn:'Refresh in', sponsors:'Sponsors',
@@ -1847,7 +2019,10 @@ const I18N = {
     gender:'Gender', city:'City', team:'Team', worstLap:'Worst lap', avgLap:'Average lap', totalTime:'Total time', rest:'Total rest', pbLoops:'PB loops', workingPlace:'Pos.', lapNote:'Lap = lap time. Rest = time from finishing a lap to the next lap start.', lapTimeShort:'lap', restShort:'rest',
     timeline:'Milestones', showTimeline:'Show timeline', hideTimeline:'Hide timeline', statusLegend:'Statuses', statusLegendTitle:'Status legend', statusLegendSubtitle:'What do the runner status abbreviations mean?', privacy:'Privacy policy', privacyTitle:'Privacy policy', privacySubtitle:'Live results data', currentLoop:'Current loop:', timelineTitle:'Show / hide timeline', sponsorsTitle:'Show / hide sponsors', closeSponsors:'Close sponsors banner',
     start:'Start', now:'Now', day1:'Day 1', day2:'Day 2', womenRecord:'Women course record', courseRecord:'Course record', leagueRecord:'Best league result 2026', worldRecord:'World record', polandRecord:'Polish record', orgMichalRecord:'Organizer Michał record', orgNorbertRecord:'Organizer Norbert record', riskNote:'Beat at your own risk', day:'day',
-    liveFeedTitle:'Latest events', liveWaiting:'Waiting for new results…', feedLap:'Lap', feedPb:'New PB', feedFastest:'Fastest', feedStatus:'Status'
+    liveFeedTitle:'Latest events', liveWaiting:'Waiting for new results…', feedLap:'Lap', feedPb:'New PB', feedFastest:'Fastest', feedStatus:'Status',
+    watched:'Following', watchRunner:'Follow runner', unwatchRunner:'Unfollow runner', showAllRunners:'Show all runners', showWatchedRunners:'Show followed runners only', noWatchedRunners:'You are not following any runners yet.', watchEmptyHint:'Use the stars in the table to follow runners.',
+    atFinish:'Finished', ofTotal:'of', beforeStart:'Before the start', waitingResults:'Waiting for results', viewLoopResults:'View this loop’s results', partialResults:'partial results', recordedLoopResults:'Recorded results for the current loop', alreadyFinished:'Finished', awaitingResult:'Awaiting result', outThisLoop:'Out', countedFinishesOnly:'Only counted finishes for this loop are shown.', awaitingResultNote:'No counted finish has been recorded for this loop. This list does not confirm the runner’s current location.', outThisLoopNote:'Race ended without a counted finish for this loop. DNS and refusal to start this loop (RTC) are excluded.', partialResultsNote:'The full number of starters for this loop is not yet confirmed in the results.', loopGroups:'Loop result groups', noRunnersInGroup:'No runners in this group.', closeWindow:'Close window',
+    nextGoal:'Next milestone', nextGoalShort:'Goal', reachedGoalShort:'Goals', timelineSwipe:'Swipe or scroll sideways', reachedGoals:'Reached milestones', goalReached:'reached', raceEnded:'Race finished', viewGoals:'View milestones and runners who reached them', goalsByCountedLoops:'Milestones based on counted loops', chooseGoal:'Choose milestone', leadingResult:'Leading result', runnersReached:'Runners who reached it', noGoalReachedYet:'No runner has reached this milestone yet.'
   }
 };
 function t(k){ return (I18N[uiLang] && I18N[uiLang][k]) || I18N.pl[k] || k; }
@@ -1863,6 +2038,12 @@ let acceptedDataHash = '';
 let uiLang = 'pl';
 let lastScrollState = false;
 let timelineVisible = false;
+let timelineSwipeHintTimer = null;
+let timelineSwipeHintToken = 0;
+let timelineSwipeHintBound = false;
+let timelineDragState = null;
+let timelineDragSuppressClick = false;
+let timelineDragBound = false;
 let sponsorsVisible = true;
 let liveRunnerSnapshot = new Map();
 let liveBestLapSec = Infinity;
@@ -1911,6 +2092,240 @@ function flagEmojiHtml(flag, country) {
   return `<img class="flag-emoji-img" src="${src}" alt="${emoji}" title="${esc(label)}" decoding="async">`;
 }
 
+// Funkcje widza korzystają wyłącznie z zaakceptowanego stanu tabeli.
+const WATCH_STORAGE_KEY = 'bu-watch-v1:' + simpleHash(String(CONFIG.csvUrl || '').split('?')[0]);
+let watchedRunnerKeys = new Set();
+let watchedOnly = false;
+let spectatorPanelType = '';
+let spectatorLoopGroup = 'completed';
+let spectatorGoalKey = '';
+
+function loadWatchedRunners_(){
+  try {
+    const saved = JSON.parse(storageGet(WATCH_STORAGE_KEY) || '[]');
+    watchedRunnerKeys = new Set(Array.isArray(saved)
+      ? saved.filter(key => typeof key === 'string' && /^(bib|name):/.test(key) && key.length <= 250)
+      : []);
+  } catch(e) { watchedRunnerKeys = new Set(); }
+}
+function isWatchedRunner_(row){ return watchedRunnerKeys.has(runnerKey_(row)); }
+function watchButtonHtml_(row, location){
+  const watched = isWatchedRunner_(row);
+  const label = (watched ? t('unwatchRunner') : t('watchRunner')) + ': ' + (row[COL.name] || '–');
+  return `<button type="button" id="watch-${location}-${row._idx}" class="watch-star${watched ? ' is-watched' : ''}${location === 'mobile' ? ' watch-star-mobile' : ''}" onclick="toggleWatchedRunner(event,${row._idx})" aria-pressed="${watched}" aria-label="${esc(label)}" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.8 5.7 6.3.9-4.55 4.43 1.07 6.26L12 17.33l-5.62 2.96 1.07-6.26L2.9 9.6l6.3-.9Z"/></svg></button>`;
+}
+function toggleWatchedRunner(event, idx){
+  if(event){ event.preventDefault(); event.stopPropagation(); }
+  const row = rows.find(r => r._idx === idx);
+  if(!row) return;
+  const focusId = event && event.currentTarget && event.currentTarget.id;
+  const key = runnerKey_(row);
+  if(watchedRunnerKeys.has(key)) watchedRunnerKeys.delete(key); else watchedRunnerKeys.add(key);
+  storageSet(WATCH_STORAGE_KEY, JSON.stringify([...watchedRunnerKeys]));
+  render();
+  renderSpectatorPanel_();
+  if(focusId) (document.getElementById(focusId) || document.getElementById('btn-watched'))?.focus({preventScroll:true});
+}
+function toggleWatchedFilter(force){
+  watchedOnly = typeof force === 'boolean' ? force : !watchedOnly;
+  render();
+}
+function syncWatchedFilter_(){
+  const button = document.getElementById('btn-watched');
+  if(!button) return;
+  const count = rows.filter(isWatchedRunner_).length;
+  button.classList.toggle('is-active', watchedOnly);
+  button.setAttribute('aria-pressed', String(watchedOnly));
+  button.title = watchedOnly ? t('showAllRunners') : t('showWatchedRunners');
+  button.setAttribute('aria-label', `${t('watched')}: ${count}. ${button.title}`);
+  document.getElementById('lbl-watched').textContent = t('watched');
+  document.getElementById('watched-count').textContent = count;
+}
+function hasCompletedLoop_(row, loop){
+  if((row._loops || 0) < loop || row._status === 'DNS') return false;
+  const entries = (row._laps || []).filter(l => int(l.lap) === loop);
+  // Historia przyszłych pętli nie potwierdza ukończenia. Liczba zaliczonych
+  // pętli musi już obejmować dany numer; wpis OVER / counted:false nie liczy się.
+  if(entries.length && !entries.some(l => l.counted !== false && (l.seconds || durationToSeconds(l.time)) <= 3600)) return false;
+  return true;
+}
+function recordedLoopSeconds_(row, loop){
+  if(!hasCompletedLoop_(row, loop)) return 0;
+  const entry = (row._laps || []).find(l => int(l.lap) === loop && l.counted !== false && (l.seconds || durationToSeconds(l.time)) <= 3600);
+  if(entry) return entry.seconds || durationToSeconds(entry.time) || 0;
+  return (row._loops || 0) === loop ? durationToSeconds(row[COL.lastLap]) : 0;
+}
+function spectatorLoopState_(){
+  const maxCompleted = Math.max(0, ...rows.filter(r => r._status !== 'DNS').map(r => r._loops || 0));
+  const start = parseDate(meta.raceStart);
+  const beforeStart = maxCompleted === 0 && !!start && Date.now() < start.getTime();
+  const loop = Math.max(0, int(getDisplayLoop_()));
+  const state = {loop, beforeStart, completed:[], pending:[], out:[], incomplete:false};
+  if(!loop || beforeStart) return {...state, total:0};
+  rows.forEach(row => {
+    if(row._status === 'DNS') return;
+    if(hasCompletedLoop_(row, loop)) { state.completed.push(row); return; }
+    if(row._status === 'RUN') {
+      state.pending.push(row);
+      if((row._loops || 0) < loop - 1) state.incomplete = true;
+      return;
+    }
+    // RTC po pętli n-1 oznacza odmowę startu na n, więc nie jest uczestnikiem n.
+    // DNC/OVER potwierdzają próbę kolejnej pętli. DNF/DSQ bez wpisu próby
+    // nie rozstrzygają, czy zawodnik na nią ruszył; wtedy nie podajemy pełnego N.
+    if(['DNC','OVER','DNF','DSQ'].includes(row._status) && (row._loops || 0) === loop - 1){
+      state.out.push(row);
+      if(['DNF','DSQ'].includes(row._status) && !(row._laps || []).some(l => int(l.lap) === loop && l.counted === false)) state.incomplete = true;
+    }
+  });
+  state.completed.sort((a,b) => {
+    const aSec = recordedLoopSeconds_(a, loop), bSec = recordedLoopSeconds_(b, loop);
+    return (aSec || Infinity) - (bSec || Infinity) || defaultLiveCompare(a,b);
+  });
+  state.pending.sort(defaultLiveCompare);
+  state.out.sort(defaultLiveCompare);
+  state.total = state.completed.length + state.pending.length + state.out.length;
+  return state;
+}
+function spectatorMilestones_(){
+  const kmPerLoop = normalizeTimelineLapDistance_(meta.lapDistanceKm);
+  const config = CONFIG.timeline || {};
+  const distances = (config.distanceMarkersKm || [50,100,200,300,400,500,600,700]).map(km => ({
+    key:'km'+km, loop:Math.ceil(Number(km) / kmPerLoop), label:km+' km', icon:'◈'
+  }));
+  const days = (config.dayMarkersHours || [24,48]).map(hours => ({key:'hour'+hours, loop:Number(hours), label:hours+' h', icon:'◷'}));
+  const records = config.records || {};
+  const recordGoals = [
+    {key:'poland', loop:Number(records.poland), label:t('polandRecord'), icon:'⚑'},
+    {key:'world', loop:Number(records.world), label:t('worldRecord'), icon:'◎'}
+  ];
+  return [...distances,...days,...recordGoals]
+    .filter(g => Number.isFinite(g.loop) && g.loop > 0)
+    .sort((a,b) => a.loop - b.loop);
+}
+function spectatorGoalState_(){
+  const goals = spectatorMilestones_();
+  const completed = Math.max(0, ...rows.filter(r => r._status !== 'DNS').map(r => r._loops || 0));
+  const next = goals.find(g => g.loop > completed);
+  const reached = goals.filter(g => g.loop <= completed);
+  const finished = isRaceFinished_();
+  const goal = finished ? (reached[reached.length - 1] || goals[0]) : (next || goals[goals.length - 1]);
+  return {goals, completed, goal, finished, allReached:!next, remaining:goal ? Math.max(0, goal.loop - completed) : 0};
+}
+function remainingLoopsText_(count){
+  return (uiLang === 'pl' ? 'jeszcze ' : '') + loopCountLabel_(count) + (uiLang === 'en' ? ' to go' : '');
+}
+function buildSpectatorInsights_(){
+  const loopState = spectatorLoopState_();
+  const loopButton = document.getElementById('btn-loop-finish');
+  const count = document.getElementById('finish-count');
+  const detail = document.getElementById('finish-loop');
+  const ready = rows.length && loopState.loop > 0 && !loopState.beforeStart && loopState.total > 0;
+  document.getElementById('lbl-finish').textContent = t('atFinish');
+  loopButton.disabled = !ready;
+  count.textContent = ready
+    ? (loopState.incomplete ? String(loopState.completed.length) : `${loopState.completed.length} ${t('ofTotal')} ${loopState.total}`)
+    : '–';
+  detail.textContent = loopState.beforeStart ? t('beforeStart') : (ready
+    ? `${t('feedLap')} ${loopState.loop}${loopState.incomplete ? ' · ' + t('partialResults') : ''}` : t('waitingResults'));
+  loopButton.setAttribute('aria-label', `${t('atFinish')}: ${count.textContent}. ${detail.textContent}. ${t('viewLoopResults')}`);
+  const goalState = spectatorGoalState_();
+  const goalButton = document.getElementById('btn-next-goal');
+  document.getElementById('lbl-next-goal').textContent = goalState.finished ? t('reachedGoals') : t('nextGoal');
+  document.getElementById('lbl-next-goal-short').textContent = goalState.finished ? t('reachedGoalShort') : t('nextGoalShort');
+  goalButton.disabled = !rows.length || !goalState.goal;
+  const goal = goalState.goal;
+  document.getElementById('next-goal-value').textContent = !rows.length || !goal ? '–'
+    : goalState.finished ? t('raceEnded')
+    : `${goal.label} · ${goalState.allReached ? t('goalReached') : remainingLoopsText_(goalState.remaining)}`;
+  goalButton.style.setProperty('--goal-progress', `${goal ? Math.min(100, goalState.completed / goal.loop * 100) : 0}%`);
+  goalButton.title = t('viewGoals');
+  goalButton.setAttribute('aria-label', `${document.getElementById('lbl-next-goal').textContent}: ${document.getElementById('next-goal-value').textContent}. ${t('viewGoals')}`);
+  syncWatchedFilter_();
+  renderSpectatorPanel_();
+}
+function openSpectatorPanel(type){
+  spectatorPanelType = type === 'goal' ? 'goal' : 'loop';
+  const state = spectatorLoopState_();
+  spectatorLoopGroup = state.completed.length ? 'completed' : 'pending';
+  spectatorGoalKey = '';
+  renderSpectatorPanel_();
+  document.getElementById('spectator-ov').classList.add('open');
+  document.getElementById('spectator-close').focus({preventScroll:true});
+}
+function closeSpectatorPanel(event){
+  const overlay = document.getElementById('spectator-ov');
+  if(event && event.target !== overlay) return;
+  overlay.classList.remove('open');
+  const button = document.getElementById(spectatorPanelType === 'goal' ? 'btn-next-goal' : 'btn-loop-finish');
+  spectatorPanelType = '';
+  button?.focus({preventScroll:true});
+}
+function selectSpectatorLoopGroup(group){
+  spectatorLoopGroup = ['completed','pending','out'].includes(group) ? group : 'completed';
+  renderSpectatorPanel_();
+}
+function selectSpectatorGoal(key){ spectatorGoalKey = String(key); renderSpectatorPanel_(); }
+function openSpectatorRunner(idx){
+  document.getElementById('spectator-ov').classList.remove('open');
+  spectatorPanelType = '';
+  openModalByIndex(idx);
+}
+function spectatorRunnerListHtml_(data, loop, showTime){
+  if(!data.length) return `<p class="spectator-empty">${esc(t('noRunnersInGroup'))}</p>`;
+  return `<div class="spectator-runners">${data.map(row => {
+    const sec = showTime ? recordedLoopSeconds_(row, loop) : 0;
+    const info = sec ? formatDurationFromSeconds(sec) : loopCountLabel_(row._loops || 0);
+    return `<div class="spectator-runner"><button type="button" class="spectator-runner-main" onclick="openSpectatorRunner(${row._idx})"><span class="spectator-bib">${esc(row[COL.bib] || '–')}</span>${flagEmojiHtml(row._flag,row[COL.country])}<span class="spectator-runner-name">${esc(row[COL.name] || '–')}<small>${esc(info)}</small></span>${badge(row._status)}</button>${watchButtonHtml_(row,'panel')}</div>`;
+  }).join('')}</div>`;
+}
+function renderSpectatorPanel_(){
+  if(!spectatorPanelType) return;
+  const focusedId = document.getElementById('spectator-ov').contains(document.activeElement) ? document.activeElement.id : '';
+  const title = document.getElementById('spectator-title');
+  const subtitle = document.getElementById('spectator-subtitle');
+  const body = document.getElementById('spectator-body');
+  document.getElementById('spectator-close').setAttribute('aria-label',t('closeWindow'));
+  if(spectatorPanelType === 'loop'){
+    const state = spectatorLoopState_();
+    title.textContent = `${t('feedLap')} ${state.loop || '–'}`;
+    subtitle.textContent = t('recordedLoopResults');
+    if(state.beforeStart || !state.loop){ body.innerHTML = `<p class="spectator-empty">${esc(state.beforeStart ? t('beforeStart') : t('waitingResults'))}</p>`; return; }
+    const tabs = [
+      {key:'completed',label:t('alreadyFinished'),data:state.completed},
+      {key:'pending',label:t('awaitingResult'),data:state.pending},
+      {key:'out',label:t('outThisLoop'),data:state.out}
+    ];
+    const selected = tabs.find(tab => tab.key === spectatorLoopGroup) || tabs[0];
+    const note = selected.key === 'completed' ? t('countedFinishesOnly') : selected.key === 'pending' ? t('awaitingResultNote') : t('outThisLoopNote');
+    body.innerHTML = `<div class="spectator-tabs" role="group" aria-label="${esc(t('loopGroups'))}">${tabs.map(tab => `<button type="button" id="spectator-tab-${tab.key}" class="spectator-tab${tab.key === selected.key ? ' is-active' : ''}" onclick="selectSpectatorLoopGroup('${tab.key}')" aria-pressed="${tab.key === selected.key}">${esc(tab.label)} <strong>${tab.data.length}</strong></button>`).join('')}</div><p class="spectator-note">${esc(note)}${state.incomplete ? ' ' + esc(t('partialResultsNote')) : ''}</p>${spectatorRunnerListHtml_(selected.data,state.loop,selected.key === 'completed')}`;
+  } else {
+    const state = spectatorGoalState_();
+    const selected = state.goals.find(g => g.key === spectatorGoalKey) || state.goal;
+    if(!selected) return;
+    spectatorGoalKey = selected.key;
+    const reached = rows.filter(row => hasCompletedLoop_(row,selected.loop)).sort(defaultLiveCompare);
+    title.textContent = t('timeline');
+    subtitle.textContent = t('goalsByCountedLoops');
+    const remaining = Math.max(0,selected.loop - state.completed);
+    body.innerHTML = `<label class="goal-select-label" for="spectator-goal-select">${esc(t('chooseGoal'))}</label><select id="spectator-goal-select" class="spectator-goal-select" onchange="selectSpectatorGoal(this.value)">${state.goals.map(g => `<option value="${g.key}"${g.key === selected.key ? ' selected' : ''}>${esc(g.label)} · ${esc(loopCountLabel_(g.loop))}${g.loop <= state.completed ? ' ✓' : ''}</option>`).join('')}</select><div class="spectator-goal-summary"><strong>${esc(selected.label)}</strong><span>${esc(loopCountLabel_(selected.loop))}</span><span>${esc(remaining ? remainingLoopsText_(remaining) : t('goalReached'))}</span></div><p class="spectator-note">${esc(t('leadingResult'))}: <strong>${esc(loopCountLabel_(state.completed))}</strong>.${state.finished ? ' ' + esc(t('raceEnded')) : ''}</p><div class="msec-title">${esc(t('runnersReached'))} · ${reached.length}</div>${reached.length ? spectatorRunnerListHtml_(reached,selected.loop,false) : `<p class="spectator-empty">${esc(t('noGoalReachedYet'))}</p>`}`;
+  }
+  if(focusedId) document.getElementById(focusedId)?.focus({preventScroll:true});
+}
+
+window.addEventListener('storage', event => {
+  if(event.key === WATCH_STORAGE_KEY || event.key === null){
+    loadWatchedRunners_(); render(); renderSpectatorPanel_();
+  }
+});
+document.getElementById('spectator-ov').addEventListener('keydown', event => {
+  if(event.key !== 'Tab') return;
+  const items = [...document.getElementById('spectator-ov').querySelectorAll('button:not(:disabled),select')];
+  const first = items[0], last = items[items.length - 1];
+  if(event.shiftKey && document.activeElement === first){ event.preventDefault(); last?.focus(); }
+  else if(!event.shiftKey && document.activeElement === last){ event.preventDefault(); first?.focus(); }
+});
+
 initStatic();
 // Najpierw natychmiast pokazujemy ostatni poprawny stan zapisany w tej przeglądarce.
 // Pobranie z Google odbywa się zaraz potem i może go zastąpić wyłącznie nowszą wersją.
@@ -1920,7 +2335,7 @@ setInterval(refreshCountdown, 1000);
 setInterval(updateRaceClock, 1000);
 window.addEventListener('focus', () => { fetchData(); countdown = CONFIG.refreshSec; });
 document.addEventListener('visibilitychange', () => { if(!document.hidden){ fetchData(); countdown = CONFIG.refreshSec; } });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('ov').classList.remove('open'); document.getElementById('legend-ov').classList.remove('open'); document.getElementById('privacy-ov').classList.remove('open'); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('ov').classList.remove('open'); document.getElementById('legend-ov').classList.remove('open'); document.getElementById('privacy-ov').classList.remove('open'); if(spectatorPanelType) closeSpectatorPanel(); } });
 document.addEventListener('fullscreenchange', () => { const b=document.getElementById('btn-fs'); if(b) b.textContent='⛶'; });
 
 function initStatic(){
@@ -1931,10 +2346,14 @@ function initStatic(){
   const spt = document.getElementById('spt');
   spt.innerHTML = [...CONFIG.sponsors, ...CONFIG.sponsors].map(s => `<img class="spimg" src="${esc(s)}" alt="Sponsor" loading="lazy">`).join('');
   loadLiveEvents_();
+  loadWatchedRunners_();
   loadUiPreferences();
   applyUiPreferences();
+  initTimelineSwipeHint_();
+  initTimelineDrag_();
   buildHead();
   updateLabels();
+  applyMeta(meta);
   buildTimeline();
   setStickyTop();
   handleScroll();
@@ -2342,11 +2761,11 @@ function readMeta(data){
 }
 
 function applyMeta(m){
-  const eventName = CONFIG.eventNameOverride || m.eventName || 'Backyard Ultra';
+  const eventName = CONFIG.eventNameOverride || m.eventName || 'Backyard Ultra 100 Jezior 2026';
   const eventSubtitle = (uiLang === 'en' ? (CONFIG.eventSubtitleOverrideEn || CONFIG.eventSubtitleOverride) : CONFIG.eventSubtitleOverride) || m.eventSubtitle || t('liveResults');
   document.title = eventName + ' – Live';
   document.querySelector('.hdr-name').textContent = eventName;
-  document.querySelector('.hdr-sub').innerHTML = `${esc(eventSubtitle)} · ${t('updated')} <span id="upd-time">${esc(formatDateTime(m.lastUpdate) || '–')}</span>`;
+  document.querySelector('.hdr-sub').innerHTML = `<span class="hdr-event-details">${esc(eventSubtitle)}</span><span class="hdr-update-details">${t('updated')} <span id="upd-time">${esc(formatDateTime(m.lastUpdate) || '–')}</span></span>`;
   updateRaceClock();
 }
 
@@ -2661,6 +3080,7 @@ function parseLaps(raw){
 
 function buildHead(){
   const cols = tableCols();
+  document.body.classList.toggle('has-topb', cols.some(c => c.role === 'topb'));
   setTableGrid(cols);
   document.getElementById('thead').innerHTML = '<tr>' + cols.map(c => {
     const cls = sortKey === c.key ? (sortDir > 0 ? 'sa' : 'sd') : '';
@@ -2698,14 +3118,22 @@ function tableCols(){
 }
 
 function render(){
+  syncWatchedFilter_();
   const q = document.getElementById('srch').value.toLowerCase().trim();
   let data = rows.filter(r => !q || [COL.name, COL.bib, COL.country, COL.city, COL.team, COL.status].some(k => String(r[k] || '').toLowerCase().includes(q)));
+  if(watchedOnly) data = data.filter(isWatchedRunner_);
   data = sortRows(data);
-  if (!data.length) return showTableMessage(t('noResults'));
+  if (!data.length) {
+    const emptyWatch = watchedOnly && !rows.some(isWatchedRunner_);
+    return showTableMessage(emptyWatch
+      ? `${esc(t('noWatchedRunners'))}<br><small>${esc(t('watchEmptyHint'))}</small><br><button type="button" class="table-empty-action" onclick="toggleWatchedFilter(false)">${esc(t('showAllRunners'))}</button>`
+      : esc(t('noResults')));
+  }
   const cols = tableCols();
   document.getElementById('tbody').innerHTML = data.map(r => {
     const rowCls = [
       isFemale(r) ? 'rf' : '',
+      isWatchedRunner_(r) ? 'row-watched' : '',
       isLiveFxActive_(liveRowFxUntil, r) ? 'row-live-update' : ''
     ].filter(Boolean).join(' ');
     const cells = cols.map(c => cellHtml(r,c)).join('');
@@ -2718,7 +3146,7 @@ function cellHtml(r,c){
   if(c.role === 'bib') return `<td class="ck">${esc(r[COL.bib] || '–')}</td>`;
   if(c.role === 'name') {
     const sub = [r[COL.city], r[COL.team]].filter(Boolean).join(' · ');
-    return `<td class="cn">${esc(r[COL.name] || '–')}${sub ? `<div class="cn-sub">${esc(sub)}</div>` : ''}</td>`;
+    return `<td class="cn"><div class="cn-line">${watchButtonHtml_(r,'table')}<div class="cn-copy"><span class="cn-name">${esc(r[COL.name] || '–')}</span>${sub ? `<div class="cn-sub">${esc(sub)}</div>` : ''}</div></div></td>`;
   }
   if(c.role === 'flag') return `<td class="flag-cell">${flagEmojiHtml(r._flag, r[COL.country])}</td>`;
   if(c.role === 'status') return `<td>${badge(r._status)}</td>`;
@@ -2726,9 +3154,10 @@ function cellHtml(r,c){
   if(c.role === 'distance') return `<td class="ck">${formatKm(r._distance)} km</td>`;
   if(c.role === 'time') return `<td class="ct">${formatDuration(r[c.key]) || '–'}</td>`;
   if(c.role === 'topb') {
-    if(isDebutant(r)) return `<td class="ck topb-cell new-pb-cell"><span class="new-pb debut">${esc(t('debut'))}</span></td>`;
-    if(hasNewPersonalBest(r)) return `<td class="ck topb-cell new-pb-cell"><span class="new-pb">${esc(t('newPb'))}</span></td>`;
-    return `<td class="ck topb-cell"><span class="topb-label">${esc(t('toPb'))}:</span><span class="topb-value">${formatToPb(r[c.key])}</span></td>`;
+    const star = watchButtonHtml_(r,'mobile');
+    if(isDebutant(r)) return `<td class="ck topb-cell new-pb-cell">${star}<span class="new-pb debut">${esc(t('debut'))}</span></td>`;
+    if(hasNewPersonalBest(r)) return `<td class="ck topb-cell new-pb-cell">${star}<span class="new-pb">${esc(t('newPb'))}</span></td>`;
+    return `<td class="ck topb-cell">${star}<span class="topb-label">${esc(t('toPb'))}:</span><span class="topb-value">${formatToPb(r[c.key])}</span></td>`;
   }
   return `<td class="ck">${esc(r[c.key] || '–')}</td>`;
 }
@@ -2791,10 +3220,12 @@ function buildStats(){
   const best = findBestLap();
   document.getElementById('s-best').textContent = best.time || '–';
   document.getElementById('s-best-who').textContent = best.who || '';
+  document.getElementById('s-best-who').title = best.who || '';
   document.getElementById('s-max').textContent = activeLoop || '–';
   document.getElementById('s-tot').textContent = starters;
   document.getElementById('s-act').textContent = active;
   document.getElementById('s-dnf').textContent = dropped;
+  buildSpectatorInsights_();
 }
 
 
@@ -3019,6 +3450,7 @@ function updateLabels(){
   set('lbl-sponsors', t('sponsors'));
   set('lbl-timeline', t('timeline'));
   set('lbl-timeline-current', t('currentLoop'));
+  set('timeline-swipe-label', timelineGestureLabel_());
   const srch = document.getElementById('srch'); if (srch) srch.placeholder = '🔍  ' + t('search');
 syncTimelineToggle_();
   const pdfBtn = document.getElementById('btn-pdf'); if (pdfBtn) { pdfBtn.textContent = t('pdf'); pdfBtn.title = t('pdfTitle'); }
@@ -3028,6 +3460,7 @@ syncTimelineToggle_();
   const lang = document.getElementById('btn-lang'); if (lang) { lang.textContent = uiLang === 'pl' ? 'EN' : 'PL'; lang.title = t('langTitle'); }
   const fs = document.getElementById('btn-fs'); if (fs) fs.title = t('fsTitle');
   renderLiveFeed_();
+  buildSpectatorInsights_();
 }
 
 function statusLegendRows(){
@@ -3699,8 +4132,94 @@ function syncTimelineToggle_(){
   button.setAttribute('aria-expanded',String(timelineVisible));
 }
 function toggleTimeline(force){
+  const wasVisible = timelineVisible;
   timelineVisible = typeof force === 'boolean' ? force : !timelineVisible;
   applyUiPreferences();
+  if(timelineVisible && !wasVisible) showTimelineSwipeHint_();
+  else if(!timelineVisible) { hideTimelineSwipeHint_(); stopTimelineDrag_(); }
+}
+function hideTimelineSwipeHint_(){
+  timelineSwipeHintToken++;
+  if(timelineSwipeHintTimer !== null) clearTimeout(timelineSwipeHintTimer);
+  timelineSwipeHintTimer = null;
+  const hint = document.getElementById('timeline-swipe-hint');
+  if(hint) hint.hidden = true;
+}
+function showTimelineSwipeHint_(){
+  hideTimelineSwipeHint_();
+  const token = timelineSwipeHintToken;
+  requestAnimationFrame(() => {
+    const hint = document.getElementById('timeline-swipe-hint');
+    const timeline = document.getElementById('timeline');
+    if(token !== timelineSwipeHintToken || !timelineVisible || !hint || !timeline) return;
+    if(timeline.scrollWidth <= timeline.clientWidth + 8) return;
+    document.getElementById('timeline-swipe-label').textContent = timelineGestureLabel_();
+    hint.hidden = false;
+    timelineSwipeHintTimer = setTimeout(() => {
+      if(token === timelineSwipeHintToken) hideTimelineSwipeHint_();
+    }, 5000);
+  });
+}
+function initTimelineSwipeHint_(){
+  const timeline = document.getElementById('timeline');
+  if(!timeline || timelineSwipeHintBound) return;
+  timelineSwipeHintBound = true;
+  timeline.addEventListener('scroll', hideTimelineSwipeHint_, {passive:true});
+  timeline.addEventListener('pointerdown', hideTimelineSwipeHint_, {passive:true});
+  timeline.addEventListener('keydown', hideTimelineSwipeHint_);
+}
+function timelineGestureLabel_(){
+  const mouse = typeof window.matchMedia === 'function' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  return mouse ? (uiLang === 'pl' ? 'Chwyć i przeciągnij oś' : 'Click and drag to scroll') : t('timelineSwipe');
+}
+function stopTimelineDrag_(){
+  const drag = timelineDragState;
+  timelineDragState = null;
+  const timeline = document.getElementById('timeline');
+  if(!timeline) return;
+  timeline.classList.remove('is-dragging');
+  if(!drag) return;
+  if(drag.moved) timelineDragSuppressClick = true;
+  try { if(timeline.hasPointerCapture?.(drag.pointerId)) timeline.releasePointerCapture(drag.pointerId); } catch(e) {}
+}
+function initTimelineDrag_(){
+  const timeline = document.getElementById('timeline');
+  if(!timeline || timelineDragBound) return;
+  timelineDragBound = true;
+  timeline.addEventListener('pointerdown', event => {
+    timelineDragSuppressClick = false;
+    if(event.pointerType !== 'mouse' || event.button !== 0 || !timelineVisible) return;
+    if(timeline.scrollWidth <= timeline.clientWidth + 8) return;
+    const scrollbar = Math.max(0, (timeline.offsetHeight || 0) - (timeline.clientHeight || 0));
+    if(scrollbar > 2 && event.clientY >= timeline.getBoundingClientRect().bottom - scrollbar) return;
+    timelineDragState = {pointerId:event.pointerId, x:event.clientX, y:event.clientY, left:timeline.scrollLeft || 0, moved:false};
+  });
+  window.addEventListener('pointermove', event => {
+    const drag = timelineDragState;
+    if(!drag || event.pointerId !== drag.pointerId) return;
+    if(typeof event.buttons === 'number' && !(event.buttons & 1)) { stopTimelineDrag_(); return; }
+    const dx = event.clientX - drag.x;
+    if(!drag.moved){
+      if(Math.abs(dx) <= 5 || Math.abs(dx) < Math.abs(event.clientY - drag.y)) return;
+      drag.moved = true;
+      timeline.classList.add('is-dragging');
+      hideTimelineSwipeHint_();
+      try { timeline.setPointerCapture?.(drag.pointerId); } catch(e) {}
+    }
+    event.preventDefault();
+    timeline.scrollLeft = Math.max(0, Math.min(timeline.scrollWidth - timeline.clientWidth, drag.left - dx));
+  }, {passive:false});
+  const finish = event => { if(timelineDragState && event.pointerId === timelineDragState.pointerId) stopTimelineDrag_(); };
+  window.addEventListener('pointerup', finish);
+  window.addEventListener('pointercancel', finish);
+  window.addEventListener('blur', stopTimelineDrag_);
+  timeline.addEventListener('lostpointercapture', finish);
+  timeline.addEventListener('click', event => {
+    if(!timelineDragSuppressClick || event.detail === 0) return;
+    timelineDragSuppressClick = false;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }, true);
 }
 function toggleSponsors(force){
   sponsorsVisible = typeof force === 'boolean' ? force : !sponsorsVisible;
@@ -3780,7 +4299,7 @@ function updateLapProgress_(raceSeconds){
   const angle = secInHour / 10;
   el.style.setProperty('--lap-progress', `${angle.toFixed(1)}deg`);
 }
-function showTableMessage(msg){ document.getElementById('tbody').innerHTML = `<tr><td colspan="99" class="tmsg">${msg}</td></tr>`; }
+function showTableMessage(msg){ document.getElementById('tbody').innerHTML = `<tr class="table-message"><td colspan="99" class="tmsg">${msg}</td></tr>`; }
 function toggleFS(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{}); else document.exitFullscreen(); }
 function closeOv(e){ if(e.target === document.getElementById('ov')) document.getElementById('ov').classList.remove('open'); }
 let toastTimer = null;
